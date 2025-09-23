@@ -1,3 +1,9 @@
+
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
+import { useEffect } from "react";
+import { cn } from "../lib/utils";
+
 const navItems = [
   { name: "Profile", href: "#profile" },
   { name: "Stats", href: "#stats" },
