@@ -66,6 +66,22 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* styling for nav bar */
+.nav-text {
+  color: #0a0a0a;
+  word-spacing: 0.6rem;
+  font-family: inherit;
+  letter-spacing: 0.02rem;
+  display: inline-block;
+  padding: 8px 12px;
+}
+.nav-style {
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 12px;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
