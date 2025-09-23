@@ -1,13 +1,29 @@
-# DEK Music
+# What/Where is everything? 
 
-### What is Dek Music?
-Dek is a website where you and your friends can discover, share, and play music. As you listen to music on Spotify each song appears as a card in your “deck” Users can swipe cards to interact with their own music deck. You are able to connect with your friends as it will show the similar music you are listening to in your deck of cards. Our goal is to try and connect people through music.
+SRC Folder - holds everything we are working on
+Assets Folder - where images and downloaded files go
+Components Folder - where we will have the majority of our files for text and sections of website
+Pages Folder - holds the pages our website will hold (home & NotFound as of now)
+lib Folder - functions/backend stuff
 
-### Dev Tools
-Built With: HTML, CSS, JS, ReactJS, TailwindCSS, Vite, Spotify API 
+# Where / How do I get started?
 
-### Utilized IDE
-IDE: VS code 
+1. If you want to add custom fonts or colors etc. go to index.css
 
-### Collaborators
-Created by: Daniel Lopez, Kayla Witecki, Esther Anne Ricardo 
+2. For each section we want to create its own file, go to components and create a .JSX file for example 'Stats.jsx'. 
+
+3. This file is where you will format and customize the look and text of it instead of having one file with all the text of the page. Because it's its own file before we start working on it we need to set it up so it's ready for export.
+
+    ex. 
+        export const stats = () => {
+            Do your work here 
+        }
+
+4. After you finish your file we go to 'src/pages/home.jsx', and you import the file.
+
+    ex. 
+        import { Stats } from "../components/Stats"
+
+5. Then you add it to the home function and you're done for the most part
+    ex.
+        <Stats />
