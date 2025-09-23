@@ -36,6 +36,11 @@ body {
   min-width: 320px;
   min-height: 100vh;
 }
+html,
+body,
+#root {
+  background-color: var(--bg-color);
+}
 
 h1 {
   font-size: 3.2em;
