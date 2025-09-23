@@ -78,3 +78,31 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+ /* Theme for the website */
+/* I am basically initializing variables to be called and defined later -DL */
+ @theme {
+   --color-border: hsl(var(--border));
+   --color-background: hsl(var(--background));
+   --color-foreground: hsl(var(--foreground));
+
+   --color-primary: hsl(var(--primary));
+   --color-primary-foreground: hsl(var(--primary-foreground));
+
+   --color-card: hsl(var(--card));
+  
+ }
+ /* The different themes depedning if you have light mode or dark mode on -DL*/
+ @layer base {
+   :root {
+     --background: 351, 70%, 50%
+     --foreground: #292524
+
+   }
+
+   .dark {
+     --background: 351, 70%, 50%
+
+
+   }
+ }
