@@ -43,11 +43,6 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
 import { Link } from "react-router-dom";
-=======
-import { Menu, X } from "lucide-react";
-import { useEffect } from "react";
-import { cn } from "../lib/utils";
-import { Link } from "react-router-dom";
 
 
 const navItems = [
@@ -85,7 +80,6 @@ export const Navbar = () => {
         </div>
 
         {/* Navigation Items */}
-=======
         {navItems.map((item) =>
           item.href.startsWith("/") ? (
             <Link key={item.name} to={item.href} className="nav-text hover:underline px-2">
@@ -98,6 +92,7 @@ export const Navbar = () => {
           ),
         )}
       </nav>
+      
 
       <style jsx>{`
         .navbar-container {
@@ -105,11 +100,10 @@ export const Navbar = () => {
           top: 0;
           left: 0;
           right: 0;
-          background: rgba(0, 0, 0, 0.9);
-          backdrop-filter: blur(10px);
+          background: #ffffff; /* white background */
           z-index: 1000;
           padding: 0 20px;
-          border-bottom: 1px solid #333;
+          border-bottom: 1px solid rgba(0,0,0,0.06);
         }
         
         .navbar {
@@ -123,38 +117,38 @@ export const Navbar = () => {
         .search-container {
           display: flex;
           align-items: center;
-          background: #7f7373ff;
+          background: #f3f4f6; /* light gray */
           border-radius: 25px;
           padding: 8px 16px;
           margin-right: auto;
           min-width: 300px;
           transition: all 0.3s ease;
-          border: 1px solid #333;
+          border: 1px solid rgba(0,0,0,0.06);
         }
         
         .search-container:focus-within {
-          border-color: #994242ff;
-          box-shadow: 0 0 0 2px rgba(89, 82, 107, 0.2);
+          border-color: rgba(0,0,0,0.12);
+          box-shadow: 0 0 0 2px rgba(0,0,0,0.04);
         }
         
         .search-icon {
           height: 18px;
           width: 18px;
-          color: #ffffffff;
+          color: #0a0a0a; /* dark icon */
           margin-right: 10px;
         }
         
         .search-input {
           background: transparent;
           border: none;
-          color: white;
+          color: #0a0a0a; /* dark text */
           width: 100%;
           font-size: 14px;
           outline: none;
         }
         
         .search-input::placeholder {
-          color: #ffffffff;
+          color: #6b7280; /* gray placeholder */
         }
         
         .nav-items {
@@ -164,7 +158,7 @@ export const Navbar = () => {
         }
         
         .nav-link {
-          color: white;
+          color: #0a0a0a; /* dark link text */
           text-decoration: none;
           font-weight: 500;
           padding: 8px 16px;
@@ -174,8 +168,8 @@ export const Navbar = () => {
         }
         
         .nav-link:hover {
-          color: #fa8b8bff;
-          background: rgba(255, 255, 255, 0.05);
+          color: #b91c1c;
+          background: rgba(0, 0, 0, 0.03);
         }
         
         .nav-link::after {
@@ -185,7 +179,7 @@ export const Navbar = () => {
           left: 50%;
           width: 0;
           height: 2px;
-          background: #fa8b8bff;
+          background: #b91c1c;
           transition: all 0.3s ease;
           transform: translateX(-50%);
         }

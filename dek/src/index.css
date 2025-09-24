@@ -80,6 +80,9 @@ button:focus-visible {
   top: 0;
   right: 0;
   padding: 12px;
+  background-color: #ffffff; /* make the navbar background white */
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(2, 24, 43, 0.08);
 }
 
 @media (prefers-color-scheme: light) {
