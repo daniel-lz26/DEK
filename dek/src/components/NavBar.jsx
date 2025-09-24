@@ -42,12 +42,19 @@
 
 import { useState } from "react";
 import { Search } from "lucide-react";
+import { Link } from "react-router-dom";
+=======
+import { Menu, X } from "lucide-react";
+import { useEffect } from "react";
+import { cn } from "../lib/utils";
+import { Link } from "react-router-dom";
+
 
 const navItems = [
-  { name: "Profile", href: "#profile" },
-  { name: "Stats", href: "#stats" },
-  { name: "Friends", href: "#friends" },
-  { name: "Shuffle", href: "#shuffle" },
+  { name: "Profile", href: "/profile" },
+  { name: "Stats", href: "/stats" },
+  { name: "Friends", href: "/friends" },
+  { name: "Shuffle", href: "/shuffle" },
 ];
 
 export const Navbar = () => {
@@ -78,17 +85,18 @@ export const Navbar = () => {
         </div>
 
         {/* Navigation Items */}
-        <div className="nav-items">
-          {navItems.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              className="nav-link"
-            >
+=======
+        {navItems.map((item) =>
+          item.href.startsWith("/") ? (
+            <Link key={item.name} to={item.href} className="nav-text hover:underline px-2">
+              {item.name}
+            </Link>
+          ) : (
+            <a key={item.name} href={item.href} className="nav-text hover:underline px-2">
               {item.name}
             </a>
-          ))}
-        </div>
+          ),
+        )}
       </nav>
 
       <style jsx>{`
