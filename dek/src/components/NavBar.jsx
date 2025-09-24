@@ -46,6 +46,7 @@ import { Link } from "react-router-dom";
 
 
 const navItems = [
+  { name: "Home", href: "/" },
   { name: "Profile", href: "/profile" },
   { name: "Stats", href: "/stats" },
   { name: "Friends", href: "/friends" },
@@ -148,7 +149,7 @@ export const Navbar = () => {
         }
         
         .search-input::placeholder {
-          color: #6b7280; /* gray placeholder */
+          color: #6b7280; 
         }
         
         .nav-items {
@@ -158,7 +159,7 @@ export const Navbar = () => {
         }
         
         .nav-link {
-          color: #0a0a0a; /* dark link text */
+          color: #0a0a0a; 
           text-decoration: none;
           font-weight: 500;
           padding: 8px 16px;
