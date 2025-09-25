@@ -16,7 +16,7 @@ body {
     align-items: center; /* Vertical alignment */
 }
 
-/* Logo/title style */
+/* LOGO & TITLE STYLE */
 .logo {
     color: white;
     font-size: 20px;
@@ -24,12 +24,12 @@ body {
     font-weight: bold;
 }
 
-/* Search bar container */
+/* SEARCH BAR CONTAINER */
 .search-item {
     margin-left: 10px; /* Space after logo */
 }
 
-/* Search bar styling */
+/* SEARCH BAR STYLING */
 .search-item input {
     padding: 8px 20px; /* Size of search bar */
     border: none; /* Remove border */
@@ -41,13 +41,13 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Hover shadow effect */
 }
 
-/* Menu items container */
+/* MENU ITEMS CONTAINER */
 .menu-items {
     display: flex;
     margin-left: auto; /* Push menu to far right */
 }
 
-/* Menu link style */
+/* MENU LINK STYLE */
 ul li a {
     display: block;
     color: white;
@@ -56,17 +56,26 @@ ul li a {
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Menu link hover effect */
+/* MENU LINK HOVER EFFECT */
 ul li a:hover {
     background-color: #312f2f;
     box-shadow: 0 2px 4px rgba(212, 199, 199, 0.3);
     border-radius: 20px;
     border-width: 5px;
 }
+/* PAGE CONTAINER: centers everything */
+.page-container {
+    display: flex;
+    flex-direction: column; /* Stack vertically */
+    align-items: center; /* Center horizontally */
+    margin-top: 40px; /* Space below navbar */
+}
 
-/* CENTER BOX */
+/* CENTER BOX: welcome sign */
 .center-box {
     background-color: white; /* White background */
+    max-width: 2000px; /* Limit max width */
+    min-width: 200px; /* Ensure minimum width */
     padding: 40px; /* Inner spacing */
     margin: 60px auto 60px auto; /* Center horizontally */
     border-radius: 10px; /* Rounded corners */
@@ -76,18 +85,21 @@ ul li a:hover {
     height: 120px;
 }
 
-/* PROFILE SECTION */
+/* TOP 5 PROFILE SECTION */
 .profile-section {
     display: flex; /* Horizontal layout for profiles */
     justify-content: space-between; /* Equal spacing */
-    margin: 30px auto; /* Center horizontally */
+    margin: 30px auto 0 auto; /* Center horizontally */
     width: 80%; /* Matches center box width */
     gap: 40px; /* Space between profile boxes */
 }
 
-/* PROFILE BOX */
+/* TOP 5 PROFILE BOX */
 .profile-box {
     background-color: white;
+    flex: 1; /* Equal width for three boxes */
+    max-width: 200px; /* Limit max width */
+    min-width: 180px; /* Ensure minimum width */
     width: calc((100% / 3) - 13.33px); /* Equal width for three boxes */
     padding: 20px;
     border-radius: 10px;
@@ -96,9 +108,10 @@ ul li a:hover {
     display: flex;
     flex-direction: column; /* Stack icon and description vertically */
     align-items: center;
+    transition: transform 0.2s ease; /* Smooth hover effect */
 }
 
-/* Hover effect for profile box */
+/* HOVER EFFECT FOR TOP 5PROFILE BOX */
 .profile-box:hover {
     transform: translateY(-5px); /* Slight lift on hover */
 }
@@ -106,8 +119,8 @@ ul li a:hover {
 /* PROFILE ICON */
 .profile-icon {
     background-color: lightgray;
-    width: 150px; /* Square width */
-    height: 150px; /* Square height */
+    width: 100%; /* Square width */
+    height: auto; /* Square height */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -126,8 +139,23 @@ ul li a:hover {
 /* PROFILE IMAGE */
 .profile-image {
     width: 150px; /* Match icon size */
-    height: 150px; /* Match icon size */
+    max-width: 100%;
+    height: auto; /* Match icon size */
     border-radius: 10px; /* Slightly rounded corners */
     object-fit: cover; /* Ensure image covers the area */
     margin-bottom: 10px;
+}
+
+/* RESPONSIVE PROFILE */
+.profile-section-responsive {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    justify-content: center; /* Center items */
+    gap: 20px; /* Space between items */
+}
+
+/* RESPONSIVE PROFILE BOX */
+.profile-box {
+    flex: wrap; /* Responsive width for three boxes */
+    max-width: 100%; /* Ensure max width*/
 }
