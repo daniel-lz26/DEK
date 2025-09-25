@@ -1,7 +1,4 @@
 import { Navbar } from "../components/NavBar"
-import avatarSrc from "../assets/images/DEK.png"
-
-
 export const Profile = () => {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden font-black">

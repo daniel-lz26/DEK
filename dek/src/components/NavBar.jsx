@@ -40,60 +40,40 @@
 
 // // export default Navbar;
 
-// import { useState } from "react";
+import { useState } from "react";
 // import { Search } from "lucide-react";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 
-// const navItems = [
-//   { name: "Home", href: "/" },
-//   { name: "Profile", href: "/profile" },
-//   { name: "Stats", href: "/stats" },
-//   { name: "Friends", href: "/friends" },
-//   { name: "Shuffle", href: "/shuffle" },
-// ];
+    const navItems = [
+    { name: "Home", href: "/" },
+    { name: "Profile", href: "/profile" },
+    { name: "Stats", href: "/stats" },
+    { name: "Friends", href: "/friends" },
+    { name: "Shuffle", href: "/shuffle" },
+    ];
 
-// export const Navbar = () => {
-//   const [searchQuery, setSearchQuery] = useState("");
+export const Navbar = () => {
+  return (
+    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000 }}>
+      <ul className="navbar">
+        <li className="logo">DekMusic</li>
+    <li className="search-item">
+        <input type="text" placeholder="Search..." />
+    </li>
+        <div className="menu-items">
+          {navItems.map((item) => (
+            <li key={item.name}>
+              <Link to={item.href}>{item.name}</Link>
+            </li>
+          ))}
+        </div>
+      </ul>
+    </div>
+  );
+};
 
-//   const handleSearch = (e) => {
-//     if (e.key === "Enter" && searchQuery.trim()) {
-//       // Handle search functionality here
-//       console.log("Searching for:", searchQuery);
-//       // You can add your search logic or navigation here
-//     }
-//   };
-
-//   return (
-//     <div className="navbar-container">
-//       <nav className="navbar">
-//         {/* Search Bar on the far left */}
-//         <div className="search-container">
-//           <Search className="search-icon" />
-//           <input
-//             type="text"
-//             placeholder="let's look for new dek?"
-//             className="search-input"
-//             value={searchQuery}
-//             onChange={(e) => setSearchQuery(e.target.value)}
-//             onKeyPress={handleSearch}
-//           />
-//         </div>
-
-//         {/* Navigation Items */}
-//         {navItems.map((item) =>
-//           item.href.startsWith("/") ? (
-//             <Link key={item.name} to={item.href} className="nav-text hover:underline px-2">
-//               {item.name}
-//             </Link>
-//           ) : (
-//             <a key={item.name} href={item.href} className="nav-text hover:underline px-2">
-//               {item.name}
-//             </a>
-//           ),
-//         )}
-//       </nav>
-      
+export default Navbar;
 
 //       <style jsx>{`
 //         .navbar-container {

@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';            // Tailwind setup
-import './assets/styles/styles.css';    // Your custom DekMusic styles
+import '../styles.css';  // Your custom DekMusic styles
 import App from './App.jsx';
 
 createRoot(document.getElementById('root')).render(
