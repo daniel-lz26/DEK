@@ -1,127 +1,55 @@
-@import "tailwindcss"
+/* Import Tailwind base layers */
+@import "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* ---- Custom Layered Styles ---- */
 
-
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: #02182B;
-  background-color: #D7263D;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Center box */
+.center-box {
+  @apply bg-white max-w-[2000px] min-w-[200px] w-4/5 h-32 
+         mx-auto my-16 p-10 rounded-lg shadow-lg text-center;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+/* Profiles container */
+.profiles-container {
+  @apply flex flex-col items-center mt-5 gap-5;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-html,
-body,
-#root {
-  background-color: var(--bg-color);
+.profiles-header {
+  @apply text-white text-2xl font-semibold text-center mb-5;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.profile-section {
+  @apply flex flex-wrap justify-center gap-10 w-4/5;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+/* Profile box */
+.profile-box {
+  @apply relative bg-white flex flex-col justify-center items-center p-4 rounded-lg shadow-lg 
+         w-[200px] aspect-[2.5/3.5] /* This creates the card shape */
+         border border-gray-300
+         transition-transform duration-200 hover:-translate-y-1;
 }
 
-/* styling for nav bar */
-.nav-text {
-  color: #0a0a0a;
-  word-spacing: 0.6rem;
-  font-family: inherit;
-  letter-spacing: 0.02rem;
-  display: inline-block;
-  padding: 8px 12px;
-}
-.nav-style {
-  position: fixed;
-  top: 0;
-  right: 0;
-  padding: 12px;
-  background-color: #ffffff; /* make the navbar background white */
-  border-radius: 8px;
-  box-shadow: 0 6px 18px rgba(2, 24, 43, 0.08);
+.profile-image {
+  /* Slightly smaller to fit better inside the card */
+  @apply w-24 h-24 object-cover rounded-xl mb-2;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.suit-symbol {
+  /* This is the class for your corner symbols */
+  @apply absolute text-4xl font-bold;
 }
 
- /* Theme for the website */
-/* I am basically initializing variables to be called and defined later -DL */
- @theme {
-   --color-border: hsl(var(--border));
-   --color-background: hsl(var(--background));
-   --color-foreground: hsl(var(--foreground));
+.profile-desc {
+  /* Making the name bold and black for readability */
+  @apply text-base font-semibold text-black;
+}
 
-   --color-primary: hsl(var(--primary));
-   --color-primary-foreground: hsl(var(--primary-foreground));
+/* Friends activity */
+.friends-activity {
+  @apply flex flex-col items-center mt-10;
+}
 
-   --color-card: hsl(var(--card));
-  
- }
- /* The different themes depedning if you have light mode or dark mode on -DL*/
- @layer base {
-   :root {
-     --background: 351, 70%, 50%
-     --foreground: #292524
-
-   }
-
-   .dark {
-     --background: 351, 70%, 50%
-
-
-   }
- }
+.friend-image {
+  @apply w-24 h-24 object-cover rounded-full shadow-md;
+}
