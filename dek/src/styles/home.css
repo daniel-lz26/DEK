@@ -5,8 +5,14 @@
 
 /* Center box */
 .center-box {
-  @apply bg-white max-w-[2000px] min-w-[200px] w-4/5 h-32 
-         mx-auto my-16 p-10 rounded-lg shadow-lg text-center;
+  @apply max-w-3xl      /* Makes the box slimmer */
+         mx-auto        /* Centers it horizontally */
+         my-32          /* Increased vertical space (was my-20) */
+         bg-white 
+         p-8 
+         rounded-lg 
+         shadow-md 
+         text-center;
 }
 
 /* Profiles container */
@@ -19,13 +25,13 @@
 }
 
 .profile-section {
-  @apply flex flex-wrap justify-center gap-10 w-4/5;
+  @apply grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-6 w-full max-w-5xl;
 }
 
 /* Profile box */
 .profile-box {
   @apply relative bg-white flex flex-col justify-center items-center p-4 rounded-lg shadow-lg 
-         w-[200px] aspect-[2.5/3.5] /* This creates the card shape */
+         aspect-[2.5/3.5] /* This creates the card shape */
          border border-gray-300
          transition-transform duration-200 hover:-translate-y-1;
 }
@@ -45,11 +51,3 @@
   @apply text-base font-semibold text-black;
 }
 
-/* Friends activity */
-.friends-activity {
-  @apply flex flex-col items-center mt-10;
-}
-
-.friend-image {
-  @apply w-24 h-24 object-cover rounded-full shadow-md;
-}

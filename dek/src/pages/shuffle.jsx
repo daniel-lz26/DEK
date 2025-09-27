@@ -1,4 +1,4 @@
-import { Navbar } from "../components/NavBar"
+import { SearchBar } from "../components/SearchBar"
 
 export const Shuffle = () => {
   return (
