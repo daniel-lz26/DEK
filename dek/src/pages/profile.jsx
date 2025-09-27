@@ -8,23 +8,25 @@ import { FriendDeks } from '../components/FriendDeks';
 
 // Sample data for the user's top artists
 const topArtists = [
-  { name: 'Artist One', image: 'https://placehold.co/200x200/34d399/FFFFFF?text=A1' },
-  { name: 'Artist Two', image: 'https://placehold.co/200x200/fbbf24/FFFFFF?text=A2' },
-  { name: 'Artist Three', image: 'https://placehold.co/200x200/818cf8/FFFFFF?text=A3' },
-  { name: 'Artist Four', image: 'https://placehold.co/200x200/f472b6/FFFFFF?text=A4' },
+  // ... your artist data
+  { name: 'Chris Brown', image: 'https://i.scdn.co/image/ab67616d0000b27391d47d1fdcb7eff98317cfd3' },
+  { name: 'Justin Bieber', image: 'https://images.genius.com/9274ad3e642fd3ea1f81945f833ab77c.1000x1000x1.jpg' },
+  { name: 'Queen', image: 'https://www.udiscovermusic.com/wp-content/uploads/2019/03/Queen-II-album-cover-820.jpg' },
+  { name: 'Snoh Aalegra', image: 'https://images.genius.com/655cb52f5dc7df65ad18bf571319f8b8.300x300x1.jpg' },
 ];
 
 export const ProfilePage = () => {
   return (
-    <div className="bg-red-500 font-sans text-white">
+    // 1. Add h-screen and overflow-hidden to the main container
+    <div className="bg-red-500 font-sans text-white h-screen overflow-hidden">
       {/* Your existing layout components */}
       <SearchBar />
       <LeftSidebar />
       <FriendDeks />
       <MusicPlayer />
 
-      {/* Main content area for the profile */}
-      <main className="ml-24 mr-72 pt-20 px-8">
+      {/* 2. Add h-full and overflow-y-auto to the main content area */}
+      <main className="ml-24 mr-72 pt-20 px-8 h-full overflow-y-auto">
         
         {/* Profile Header Section */}
         <header className="flex items-center gap-8 py-12">
@@ -47,7 +49,7 @@ export const ProfilePage = () => {
         </header>
 
         {/* Top Artists Section */}
-        <section className="mt-8">
+        <section className="mt-8 pb-24"> {/* Added bottom padding for scroll space */}
           <div className="flex justify-between items-center mb-4">
             <div>
               <h2 className="text-2xl font-bold">Top artists this month</h2>
@@ -65,7 +67,7 @@ export const ProfilePage = () => {
                 <img 
                   src={artist.image} 
                   alt={artist.name}
-                  className="w-full aspect-circle rounded-full object-cover shadow-lg group-hover:scale-105 transition-transform"
+                  className="w-full aspect-square rounded-full object-cover shadow-lg group-hover:scale-105 transition-transform"
                 />
                 <p className="font-semibold mt-4 truncate">{artist.name}</p>
                 <p className="text-sm text-neutral-400">Artist</p>
@@ -73,7 +75,6 @@ export const ProfilePage = () => {
             ))}
           </div>
         </section>
-
       </main>
     </div>
   );

@@ -1,13 +1,38 @@
-import { SearchBar } from "../components/SearchBar"
+// src/components/FriendDeks.jsx
 
-export const Friends = () => {
+import { friends } from '../data/friends'; // 1. Import data from the new file
+
+export const FriendDeks = () => {
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden font-black">
-      <Navbar />
-      <main className="pt-28 px-4">
-        <h1 className="text-3xl mb-4">Friends</h1>
-        <p className="opacity-80">find & view what your friends are listening to</p>
-      </main>
-    </div>
-  )
-}
+    <aside className="fixed top-0 right-0 h-screen w-72 bg-neutral-900 pt-20 text-white p-4 flex flex-col gap-4 border-l border-neutral-800">
+      
+      {/* Header */}
+      <div className="font-bold text-xl">
+        Friends' Activity
+      </div>
+
+      {/* Friends List (Scrollable) */}
+      <div className="flex flex-col gap-2 flex-grow overflow-y-auto">
+        {friends.map(friend => (
+          <a key={friend.id} href="#" className="flex items-center gap-4 p-2 rounded-lg hover:bg-neutral-800 transition-colors">
+            <img 
+              src={friend.avatar} 
+              alt={friend.name}
+              className="w-12 h-12 rounded-lg object-cover"
+            />
+            <div>
+              <p className="font-semibold">{friend.name}</p>
+              {/* 2. Use the dynamic listening data */}
+              <p className="text-xs text-neutral-400">Listening to: {friend.listeningTo}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      {/* Featured Card */}
+      <div className="relative h-48 rounded-lg overflow-hidden">
+        {/* ... component content ... */}
+      </div>
+    </aside>
+  );
+};

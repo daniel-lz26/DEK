@@ -1,4 +1,7 @@
-// src/components/RightSidebar.jsx
+// src/components/LeftSidebar.jsx
+
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 // IMPORT the new icons and REMOVE BookmarkIcon if you're not using it
 import { 
@@ -11,7 +14,7 @@ import {
 
 // This is our new, simpler navigation structure
 const navLinks = [
-  // { name: 'Home', href: '/', icon: <HomeIcon className="h-7 w-7" /> },
+  //{ name: 'Home', href: '/home', icon: <HomeIcon className="h-7 w-7" /> },
   { name: 'Profile', href: '/profile', icon: <UserIcon className="h-7 w-7" /> },
   { name: 'Settings', href: '/settings', icon: <Cog6ToothIcon className="h-7 w-7" /> },
 ];
@@ -40,14 +43,14 @@ export const LeftSidebar = () => {
       {/* Main Navigation Links (This is the new part) */}
       <div className="bg-neutral-900 rounded-xl p-2 flex flex-col items-center gap-2 flex-grow">
         {navLinks.map((link) => (
-          <a 
+          <Link 
             key={link.name} 
-            href={link.href} 
+            to={link.href} 
             className="w-full aspect-square flex items-center justify-center rounded-lg text-neutral-400 hover:bg-neutral-800 hover:text-white transition-colors"
             title={link.name} // Adds a tooltip on hover
           >
             {link.icon}
-          </a>
+          </Link>
         ))}
       </div>
     </nav>

@@ -14,7 +14,7 @@ const friends = [
 
 export const FriendDeks = () => {
   return (
-    <aside className="fixed top-0 right-0 h-screen w-72 bg-neutral-900 text-white p-4 flex flex-col gap-4 border-l border-neutral-800">
+    <aside className="fixed top-0 right-0 h-screen w-72 bg-neutral-900 pt-20 text-white p-4 flex flex-col gap-4 border-l border-neutral-800">
       
       {/* Header */}
       <div className="font-bold text-xl">

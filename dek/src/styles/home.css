@@ -17,11 +17,56 @@
 
 /* Profiles container */
 .profiles-container {
-  @apply flex flex-col items-center mt-5 gap-5;
+  @apply bg-neutral-900/50 /* Dark, semi-transparent background */
+         rounded-2xl
+         p-8
+         mt-12; /* More space above */
 }
 
 .profiles-header {
-  @apply text-white text-2xl font-semibold text-center mb-5;
+  @apply text-white text-3xl font-bold text-left mb-6; /* Made larger and left-aligned */
+}
+
+/* New: A CSS grid for the dynamic layout */
+.dynamic-suites-grid {
+  @apply grid grid-cols-1 lg:grid-cols-2 gap-8 items-start;
+}
+
+/* New: A container for the smaller cards on the right */
+.other-suites-container {
+  @apply flex flex-col gap-6;
+}
+
+/* Profile box (standard size) */
+.profile-box {
+  @apply relative bg-white flex flex-col justify-center items-center p-4 rounded-lg shadow-lg 
+         aspect-[2.5/3.5]
+         border border-gray-300
+         transition-transform duration-200 hover:-translate-y-1;
+}
+
+/* New: A larger version of the profile box for the hero card */
+.profile-box-large {
+  @apply relative bg-white flex flex-col justify-center items-center p-6 rounded-xl shadow-lg
+         aspect-[2.5/3.5] /* Maintains the card shape */
+         border border-gray-300
+         transition-transform duration-200 hover:-translate-y-2;
+}
+
+.profile-image {
+  @apply w-24 h-24 object-cover rounded-xl mb-2;
+}
+
+.suit-symbol {
+  @apply absolute text-4xl font-bold;
+}
+
+.profile-desc {
+  @apply text-base font-semibold text-black;
+}
+
+.profiles-header {
+  @apply text-white text-2xl font-semibold text-left mb-5;
 }
 
 .profile-section {
