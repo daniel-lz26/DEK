@@ -1,4 +1,37 @@
-# Logs
+# ==========================================
+# SECRETS & ENVIRONMENT VARIABLES (CRITICAL!)
+# ==========================================
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env*.local
+*.env
+!.env.example
+
+# ==========================================
+# DEPENDENCIES
+# ==========================================
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+/.pnp
+.pnp.js
+
+# ==========================================
+# BUILD OUTPUTS
+# ==========================================
+dist/
+build/
+frontend/dist/
+frontend/build/
+backend/dist/
+*.tsbuildinfo
+
+# ==========================================
+# LOGS
+# ==========================================
 logs
 *.log
 npm-debug.log*
@@ -7,12 +40,53 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# ==========================================
+# TESTING
+# ==========================================
+coverage/
+*.coverage
+.nyc_output
+.jest/
+
+# ==========================================
+# CACHE & TEMP FILES
+# ==========================================
+.cache/
+.temp/
+.tmp/
+*.cache
+.vite/
+.eslintcache
+.stylelintcache
+
 node_modules
 dist
 dist-ssr
 *.local
 
-# Editor directories and files
+# ==========================================
+# OS SPECIFIC
+# ==========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# ==========================================
+# IDE & EDITORS
+# ==========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-workspace
+*.sublime-project
+.vs/
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -22,3 +96,18 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# ==========================================
+# SPOTIFY SPECIFIC
+# ==========================================
+# Access tokens (if you save them to files - DON'T DO THIS)
+tokens/
+*.token
+access_token.json
+
+# ==========================================
+# MISC
+# ==========================================
+*.orig
+.vercel
+.netlify
