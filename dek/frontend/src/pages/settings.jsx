@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { SearchBar } from "../components/SearchBar";
 import { MusicPlayer } from "../components/MusicPlayer";
 import { LeftSidebar } from "../components/LeftSideBar";
+import { redirectToSpotifyAuth, logoutSpotify } from '../lib/spotify';
 
 // A simple toggle switch component for our settings
 const ToggleSwitch = () => {
@@ -24,7 +25,7 @@ const ToggleSwitch = () => {
   );
 };
 
-export const SettingsPage = ({ onLogout }) => {
+export const SettingsPage = ({ onLogout, isSpotifyConnected }) => {
   return (
     <div className="bg-neutral-900 text-white font-sans h-screen overflow-hidden">
       {/* Re-using your main layout components */}
@@ -37,7 +38,35 @@ export const SettingsPage = ({ onLogout }) => {
         <div className="max-w-4xl mx-auto px-8 pb-24">
           <h1 className="text-4xl font-bold mb-8">Settings</h1>
 
-          {/* Account Settings Section */}
+          {/* Spotify Integration Section */}
+                <section className="mb-10">
+                <h2 className="text-xl font-semibold border-b border-neutral-700 pb-2 mb-4">Spotify Integration</h2>
+                <div className="flex justify-between items-center py-2">
+                  <div>
+                  <p>Spotify Connection</p>
+                  <p className="text-sm text-neutral-400">
+                    {isSpotifyConnected ? 'Access your Spotify data for personalized stats and music discovery' : 'Connect your Spotify account to unlock all features'}
+                  </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                    isSpotifyConnected ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                  }`}>
+                    {isSpotifyConnected ? 'Connected' : 'Not Connected'}
+                  </span>
+                  {!isSpotifyConnected && (
+                    <button 
+                    onClick={redirectToSpotifyAuth}
+                    className="text-green-400 hover:underline text-sm"
+                    >
+                    Connect
+                    </button>
+                  )}
+                  </div>
+                </div>
+                </section>
+
+           {/* Account Settings Section */}
           <section className="mb-10">
             <h2 className="text-xl font-semibold border-b border-neutral-700 pb-2 mb-4">Account</h2>
             <div className="flex justify-between items-center py-2">

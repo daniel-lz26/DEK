@@ -9,13 +9,18 @@ import {
   Bars3Icon, 
   HeartIcon, 
   UserIcon, 
-  Cog6ToothIcon 
+  Cog6ToothIcon,
+  HomeIcon,
+  UsersIcon,
+  ChartBarIcon
 } from '@heroicons/react/24/solid';
 
 // This is our new, simpler navigation structure
 const navLinks = [
-  //{ name: 'Home', href: '/home', icon: <HomeIcon className="h-7 w-7" /> },
+  { name: 'Home', href: '/', icon: <HomeIcon className="h-7 w-7" /> },
   { name: 'Profile', href: '/profile', icon: <UserIcon className="h-7 w-7" /> },
+  { name: 'Friends', href: '/friends', icon: <UsersIcon className="h-7 w-7" /> },
+  { name: 'Stats', href: '/stats', icon: <ChartBarIcon className="h-7 w-7" /> },
   { name: 'Settings', href: '/settings', icon: <Cog6ToothIcon className="h-7 w-7" /> },
 ];
 

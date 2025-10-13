@@ -1,6 +1,7 @@
 // src/components/FriendDeks.jsx
 
-import { friends } from '../data/friends'; // 1. Import data from the new file
+import { LeftSidebar } from '../components/LeftSideBar';
+import { friends } from '../lib/friends';
 
 export const FriendDeks = () => {
   return (
