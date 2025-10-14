@@ -68,30 +68,20 @@ export const Home = ({ onLogout }) => {
             </p>
           </div>
 
-          {/* 3. Removed the red background from this container */}
-          <div className="profiles-container p-8 rounded-lg">
-            <h2 className="profiles-header text-white">Discover your top suites</h2>
-            
-            {loading ? (
-              <p className="text-center text-red-100">Loading your suites...</p>
-            ) : error ? (
-              <p className="text-center text-white bg-red-800/50 p-4 rounded-lg">{error}</p>
-            ) : (
-              <div className="profile-section">
-                {topArtists.map((artist, index) => {
-                  const assignedSuit = suits[index % suits.length];
+          {/* Profiles Section */}
 
-                  return (
-                    <div key={artist.id} className="profile-box bg-white rounded-lg shadow-md">
-                      <span className={`suit-symbol top-2 left-2 ${assignedSuit.color}`}>{assignedSuit.symbol}</span>
-                      <span className={`suit-symbol bottom-2 right-2 ${assignedSuit.color}`}>{assignedSuit.symbol}</span>
-                      <img src={artist.images[0]?.url} alt={artist.name} className="profile-image" />
-                      <p className="profile-desc text-neutral-800">{artist.name}</p>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+          <div className="profiles-container">
+            <h2 className="profiles-header">Discover your top suites</h2>
+            <div className="profile-section">
+              {suitesData.map((profile) => (
+                <div key={profile.id} className="profile-box">
+                  <span className={`suit-symbol top-2 left-2 ${profile.color}`}>{profile.suit}</span>
+                  <span className={`suit-symbol bottom-2 right-2 ${profile.color}`}>{profile.suit}</span>
+                  <img src={profile.img} alt={profile.name} className="profile-image" />
+                  <p className="profile-desc">{profile.name}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </main>
