@@ -140,6 +140,9 @@ export async function spotifyApiRequest(endpoint, options = {}) {
     token = getAccessToken();
   }
   
+  console.log('DEBUG: Requesting URL:', `https://api.spotify.com/v1$${endpoint}`);
+  console.log('DEBUG: Using Access Token:', token);
+  
   const response = await fetch(`https://api.spotify.com/v1${endpoint}`, {
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -191,6 +194,15 @@ export async function getRecentlyPlayed(limit = 20) {
 export async function getCurrentPlayback() {
   return spotifyApiRequest('/me/player');
 }
+
+/**
+ * Get Audio Features for Several Tracks.
+ * https://developer.spotify.com/documentation/web-api/reference/get-several-audio-features
+ */
+export const getAudioFeaturesForTracks = async (trackIds) => {
+  const ids = trackIds.join(',');
+  return spotifyApiRequest(`/audio-features?ids=${ids}`);
+};
 
 /**
  * Logout from Spotify 
