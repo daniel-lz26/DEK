@@ -1,34 +1,96 @@
-// src/pages/ProfilePage.jsx
-
-import React from 'react';
+//================================================================
+// IMPORTS
+//================================================================
+import React, { useState, useEffect } from 'react';
 import { SearchBar } from '../components/SearchBar';
 import { MusicPlayer } from '../components/MusicPlayer';
 import { LeftSidebar } from '../components/LeftSideBar';
-import { FriendDeks } from '../components/FriendDeks';
+import { StatsSideBar } from '../components/StatsSideBar'; // Corrected component name
+import { StatsCard } from '../components/StatsCard';       // Corrected component name
+import { getTopArtists, getTopTracks, getAudioFeaturesForTracks } from '../lib/spotify'; // Spotify API functions
 
-// Sample data for the user's top artists
-const topArtists = [
-  // ... your artist data
-  { name: 'Chris Brown', image: 'https://i.scdn.co/image/ab67616d0000b27391d47d1fdcb7eff98317cfd3' },
-  { name: 'Justin Bieber', image: 'https://images.genius.com/9274ad3e642fd3ea1f81945f833ab77c.1000x1000x1.jpg' },
-  { name: 'Queen', image: 'https://www.udiscovermusic.com/wp-content/uploads/2019/03/Queen-II-album-cover-820.jpg' },
-  { name: 'Snoh Aalegra', image: 'https://images.genius.com/655cb52f5dc7df65ad18bf571319f8b8.300x300x1.jpg' },
-];
+//================================================================
+// PROFILE PAGE COMPONENT
+//================================================================
+export const ProfilePage = ({ onLogout }) => {
+  //================================================================
+  // STATE MANAGEMENT
+  //================================================================
+  const [topArtists, setTopArtists] = useState([]);
+  const [userStats, setUserStats] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-export const ProfilePage = () => {
+  //================================================================
+  // DATA FETCHING & ANALYSIS
+  //================================================================
+  useEffect(() => {
+    // This function runs once when the component loads
+    const fetchProfileData = async () => {
+      try {
+        setLoading(true);
+
+        // Fetch top artists and tracks in parallel for speed
+        const [artistsResponse, tracksResponse] = await Promise.all([
+          getTopArtists('medium_term', 4), // Get top 4 artists to display
+          getTopTracks('medium_term', 50),  // Get top 50 tracks for accurate analysis
+        ]);
+
+        setTopArtists(artistsResponse.items);
+        
+        const tracks = tracksResponse.items;
+        if (!tracks || tracks.length === 0) {
+          setLoading(false);
+          return;
+        }
+
+        // --- Perform Music Analysis ---
+        const trackIds = tracks.map(track => track.id);
+        const featuresResponse = await getAudioFeaturesForTracks(trackIds);
+        const features = featuresResponse.audio_features.filter(f => f); // Filter out any null items
+
+        const avgBpm = Math.round(features.reduce((sum, track) => sum + track.tempo, 0) / features.length);
+        const avgEnergy = Math.round((features.reduce((sum, track) => sum + track.energy, 0) / features.length) * 100);
+        const avgDanceability = Math.round((features.reduce((sum, track) => sum + track.danceability, 0) / features.length) * 100);
+
+        // We need all top artists to calculate the top genre accurately
+        const allArtistsResponse = await getTopArtists('medium_term', 50);
+        const genreCounts = allArtistsResponse.items.flatMap(artist => artist.genres).reduce((acc, genre) => {
+          acc[genre] = (acc[genre] || 0) + 1;
+          return acc;
+        }, {});
+
+        const topGenre = Object.keys(genreCounts).length > 0
+          ? Object.keys(genreCounts).reduce((a, b) => genreCounts[a] > genreCounts[b] ? a : b)
+          : 'N/A';
+        
+        // Set all calculated stats in state
+        setUserStats({ avgBpm, avgEnergy, avgDanceability, topGenre });
+
+      } catch (error) {
+        console.error("Failed to fetch profile data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfileData();
+  }, []); // The empty array ensures this effect runs only once
+
+  //================================================================
+  // RENDER METHOD
+  //================================================================
   return (
-    // 1. Add h-screen and overflow-hidden to the main container
     <div className="bg-red-500 font-sans text-white h-screen overflow-hidden">
-      {/* Your existing layout components */}
+      {/* Layout Components */}
       <SearchBar />
       <LeftSidebar />
-      <FriendDeks />
+      <StatsSideBar />
       <MusicPlayer />
 
-      {/* 2. Add h-full and overflow-y-auto to the main content area */}
+      {/* Main Scrollable Content */}
       <main className="ml-24 mr-72 pt-20 px-8 h-full overflow-y-auto">
         
-        {/* Profile Header Section */}
+        {/* --- Profile Header Section --- */}
         <header className="flex items-center gap-8 py-12">
           <img 
             src="https://placehold.co/200x200/1f2937/FFFFFF?text=T" 
@@ -48,8 +110,25 @@ export const ProfilePage = () => {
           </div>
         </header>
 
-        {/* Top Artists Section */}
-        <section className="mt-8 pb-24"> {/* Added bottom padding for scroll space */}
+        {/* --- Music Analysis Section --- */}
+        <section className="mt-8">
+          <h2 className="text-2xl font-bold mb-4">Music Analysis</h2>
+          {loading ? (
+            <p className="text-neutral-300">Analyzing your music taste...</p>
+          ) : userStats ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <StatCard label="Avg. Tempo" value={userStats.avgBpm} unit="BPM" />
+              <StatCard label="Avg. Energy" value={userStats.avgEnergy} unit="%" />
+              <StatCard label="Avg. Danceability" value={userStats.avgDanceability} unit="%" />
+              <StatCard label="Top Genre" value={<span className="capitalize">{userStats.topGenre}</span>} />
+            </div>
+          ) : (
+            <p className="text-neutral-300">Not enough data to perform analysis.</p>
+          )}
+        </section>
+
+        {/* --- Top Artists Section --- */}
+        <section className="mt-8 pb-24">
           <div className="flex justify-between items-center mb-4">
             <div>
               <h2 className="text-2xl font-bold">Top artists this month</h2>
@@ -63,9 +142,9 @@ export const ProfilePage = () => {
           {/* Artist Grid */}
           <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-6">
             {topArtists.map(artist => (
-              <a key={artist.name} href="#" className="bg-neutral-800/30 p-4 rounded-lg hover:bg-neutral-800/60 transition-colors group">
+              <a key={artist.id} href="#" className="bg-neutral-800/30 p-4 rounded-lg hover:bg-neutral-800/60 transition-colors group">
                 <img 
-                  src={artist.image} 
+                  src={artist.images[0]?.url} // Use image from API data
                   alt={artist.name}
                   className="w-full aspect-square rounded-full object-cover shadow-lg group-hover:scale-105 transition-transform"
                 />
