@@ -29,6 +29,7 @@ export const Home = ({ onLogout }) => {
           </div>
 
           {/* Profiles Section */}
+
           <div className="profiles-container">
             <h2 className="profiles-header">Discover your top suites</h2>
             <div className="profile-section">
