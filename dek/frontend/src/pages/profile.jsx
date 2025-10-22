@@ -3,7 +3,6 @@
 //================================================================
 import React, { useState, useEffect } from 'react';
 import { SearchBar } from '../components/SearchBar';
-import { MusicPlayer } from '../components/MusicPlayer';
 import { LeftSidebar } from '../components/LeftSideBar';
 import { StatsSideBar } from '../components/StatsSideBar'; // Corrected component name
 import { StatsCard } from '../components/StatsCard';       // Corrected component name
@@ -85,7 +84,6 @@ export const ProfilePage = ({ onLogout }) => {
       <SearchBar />
       <LeftSidebar />
       <StatsSideBar />
-      <MusicPlayer />
 
       {/* Main Scrollable Content */}
       <main className="ml-24 mr-72 pt-20 px-8 h-full overflow-y-auto">

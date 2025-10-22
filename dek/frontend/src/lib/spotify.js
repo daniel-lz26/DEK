@@ -79,8 +79,8 @@ export async function handleSpotifyCallback(code, state) {
   });
   
   if (!response.ok) {
-    const { error_description, error } = await response.json();
-    throw new Error(`Token error: ${error_description || error}`);
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(`Token error: ${errorData.error_description || errorData.error || 'Unknown error'}`);
   }
   
   const { access_token, refresh_token, expires_in } = await response.json();
@@ -117,8 +117,8 @@ export async function refreshAccessToken() {
   });
   
   if (!response.ok) {
-    const { error_description, error } = await response.json();
-    throw new Error(`Refresh failed: ${error_description || error}`);
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(`Refresh failed: ${errorData.error_description || errorData.error || 'Unknown error'}`);
   }
   
   const { access_token, refresh_token: newRefreshToken, expires_in } = await response.json();
@@ -130,19 +130,29 @@ export async function refreshAccessToken() {
   return { access_token, expires_in };
 }
 
-// Authenticated API requests
+// Enhanced API request with detailed error handling
 export async function spotifyApiRequest(endpoint, options = {}) {
   let token = getAccessToken();
-  
-  // Auto-refresh expired tokens
-  if (!isSpotifyAuthenticated()) {
-    await refreshAccessToken();
-    token = getAccessToken();
+
+  // Refresh token if missing or expired
+  if (!token || !isSpotifyAuthenticated()) {
+    console.log('🔄 Token missing or expired, refreshing...');
+    try {
+      await refreshAccessToken();
+      token = getAccessToken();
+    } catch (refreshError) {
+      console.error('❌ Token refresh failed:', refreshError);
+      // Clear invalid tokens
+      localStorage.removeItem('spotify_access_token');
+      localStorage.removeItem('spotify_refresh_token');
+      localStorage.removeItem('spotify_token_expiry');
+      throw new Error('Authentication failed. Please log in again.');
+    }
   }
-  
-  console.log('DEBUG: Requesting URL:', `https://api.spotify.com/v1$${endpoint}`);
-  console.log('DEBUG: Using Access Token:', token);
-  
+
+  console.log('🔗 Requesting:', `https://api.spotify.com/v1${endpoint}`);
+  console.log('🪪 Using token:', token?.slice(0, 10) + '...');
+
   const response = await fetch(`https://api.spotify.com/v1${endpoint}`, {
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -151,12 +161,43 @@ export async function spotifyApiRequest(endpoint, options = {}) {
     },
     ...options,
   });
-  
+
   if (!response.ok) {
-    if (response.status === 401) throw new Error('Authentication failed. Please log in again.');
-    throw new Error(`Spotify API error: ${response.status}`);
+    let errorMessage = `Spotify API error: ${response.status}`;
+    
+    try {
+      const errorData = await response.json();
+      console.error('❌ Spotify API Error Details:', {
+        status: response.status,
+        statusText: response.statusText,
+        endpoint: endpoint,
+        error: errorData
+      });
+      
+      if (errorData.error?.message) {
+        errorMessage = `Spotify API error: ${response.status} - ${errorData.error.message}`;
+      }
+    } catch (parseError) {
+      console.error('❌ Failed to parse error response:', parseError);
+    }
+    
+    if (response.status === 401) {
+      // Clear invalid tokens
+      localStorage.removeItem('spotify_access_token');
+      localStorage.removeItem('spotify_refresh_token');
+      localStorage.removeItem('spotify_token_expiry');
+      throw new Error('Authentication failed. Please log in again.');
+    } else if (response.status === 403) {
+      throw new Error('Permission denied. The app may need additional permissions. Please try logging in again.');
+    } else if (response.status === 429) {
+      throw new Error('Rate limit exceeded. Please try again later.');
+    } else if (response.status >= 500) {
+      throw new Error('Spotify service is temporarily unavailable. Please try again later.');
+    }
+    
+    throw new Error(errorMessage);
   }
-  
+
   return response.json();
 }
 
@@ -183,9 +224,13 @@ export async function getTopArtists(timeRange = 'medium_term', limit = 20) {
 
 /**
  * Get recently played tracks
+ * Filters out any null track IDs to prevent errors in StatsSidebar
  */
 export async function getRecentlyPlayed(limit = 20) {
-  return spotifyApiRequest(`/me/player/recently-played?limit=${limit}`);
+  const data = await spotifyApiRequest(`/me/player/recently-played?limit=${limit}`);
+  // Filter out items without a valid track ID
+  data.items = data.items?.filter(item => item.track?.id) || [];
+  return data;
 }
 
 /**
@@ -196,13 +241,49 @@ export async function getCurrentPlayback() {
 }
 
 /**
- * Get Audio Features for Several Tracks.
- * https://developer.spotify.com/documentation/web-api/reference/get-several-audio-features
+ * Get currently playing track
+ */
+export async function getCurrentlyPlaying() {
+  return spotifyApiRequest('/me/player/currently-playing');
+}
+
+/**
+ * Get Audio Features for Several Tracks
+ * Filters out null track IDs
  */
 export const getAudioFeaturesForTracks = async (trackIds) => {
-  const ids = trackIds.join(',');
+  const validIds = trackIds.filter(Boolean);
+  if (validIds.length === 0) return { audio_features: [] };
+  const ids = validIds.join(',');
   return spotifyApiRequest(`/audio-features?ids=${ids}`);
 };
+
+/**
+ * Get an Artist's Top Tracks
+ */
+export async function getArtistTopTracks(artistId, country = 'US') {
+  return spotifyApiRequest(`/artists/${artistId}/top-tracks?country=${country}`);
+}
+
+/**
+ * Check token scopes
+ */
+export async function checkTokenScopes() {
+  try {
+    const response = await fetch('https://api.spotify.com/v1/me', {
+      headers: {
+        'Authorization': `Bearer ${getAccessToken()}`
+      }
+    });
+    
+    const scopes = response.headers.get('X-Spotify-Scopes');
+    console.log('🔑 Granted Scopes:', scopes);
+    return scopes ? scopes.split(' ') : [];
+  } catch (error) {
+    console.error('❌ Failed to check scopes:', error);
+    return [];
+  }
+}
 
 /**
  * Logout from Spotify 
