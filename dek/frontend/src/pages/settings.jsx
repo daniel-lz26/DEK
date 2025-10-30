@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { SearchBar } from "../components/SearchBar";
-import { MusicPlayer } from "../components/MusicPlayer";
 import { LeftSidebar } from "../components/LeftSideBar";
 import { redirectToSpotifyAuth, logoutSpotify } from '../lib/spotify';
 
@@ -31,7 +30,6 @@ export const SettingsPage = ({ onLogout, isSpotifyConnected }) => {
       {/* Re-using your main layout components */}
       <SearchBar onLogout={onLogout} />
       <LeftSidebar />
-      <MusicPlayer />
 
       {/* Main content area for the settings */}
       <main className="ml-24 h-full overflow-y-auto pt-20">
