@@ -41,16 +41,17 @@ export const ProfilePage = ({ onLogout }) => {
         setUserProfile(profileResponse);
 
         // Fetch top artists - get 8 for "show all" functionality
-        try {
-          const artistsResponse = await getTopArtists('medium_term', 8);
-          console.log('✅ Top artists:', artistsResponse.items.length);
-          setAllTopArtists(artistsResponse.items);
-          setTopArtists(artistsResponse.items.slice(0, 4));
-        } catch (artistError) {
-          console.warn('⚠️ Could not fetch top artists:', artistError.message);
-          setTopArtists([]);
-          setAllTopArtists([]);
-        }
+        // Fetch top artists - get 8 for "show all" functionality
+try {
+  const artistsResponse = await getTopArtists('medium_term', 8);
+  console.log('✅ Top artists:', artistsResponse.items.length);
+  setAllTopArtists(artistsResponse.items);
+  setTopArtists(artistsResponse.items.slice(0, 4));
+} catch (artistError) {
+  console.warn('⚠️ Could not fetch top artists:', artistError.message);
+  setTopArtists([]);
+  setAllTopArtists([]);
+}
 
       } catch (error) {
         console.error("❌ Failed to fetch profile data:", error);
