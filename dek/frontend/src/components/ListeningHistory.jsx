@@ -48,10 +48,12 @@ export const ListeningHistory = () => {
                 className="w-10 h-10 rounded"
               />
               <div className="flex-1 min-w-0">
-                <p className="font-semibold truncate">{item.track.name}</p>
-                <p className="text-sm text-neutral-400 truncate">{item.track.artists.map(a => a.name).join(', ')}</p>
+                <p className="font-semibold truncate text-white">{item.track.name}</p>
+                {/* Lighter artist name */}
+                <p className="text-sm text-neutral-300 truncate">{item.track.artists.map(a => a.name).join(', ')}</p>
               </div>
-              <div className="text-xs text-neutral-500">
+              {/* Lighter date */}
+              <div className="text-xs text-neutral-300">
                 {new Date(item.played_at).toLocaleDateString()}
               </div>
             </div>
@@ -59,7 +61,7 @@ export const ListeningHistory = () => {
         </div>
         
         <div className="mt-6 pt-4 border-t border-neutral-700/50">
-          <p className="text-sm text-neutral-400 text-center">
+          <p className="text-sm text-neutral-300 text-center">
             Your last {recentTracks.length} played tracks
           </p>
         </div>

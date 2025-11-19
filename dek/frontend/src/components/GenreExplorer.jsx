@@ -61,7 +61,7 @@ export const GenreExplorer = () => {
                 </div>
                 <div>
                   <p className="font-semibold capitalize">{genre.name}</p>
-                  <p className="text-xs text-neutral-400">
+                  <p className="text-xs text-neutral-300">
                     {genre.count} artist{genre.count !== 1 ? 's' : ''}
                   </p>
                 </div>

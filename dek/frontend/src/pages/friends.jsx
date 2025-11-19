@@ -1,6 +1,6 @@
 // src/components/FriendDeks.jsx
 
-import { LeftSidebar } from '../components/LeftSideBar';
+import { StatsSideBar } from '../components/StatsSideBar';
 import { friends } from '../lib/friends';
 
 export const FriendDeks = () => {

@@ -98,7 +98,7 @@ export const ProfilePage = ({ onLogout }) => {
             <h1 className="text-8xl font-black lowercase">
               {userProfile?.display_name || "esther"}
             </h1>
-            <p className="text-neutral-300 text-sm">
+            <p className="text-neutral-200 text-sm">
               <span>{userProfile?.followers?.total || 0} Followers</span>
               <span className="mx-2">•</span>
               <span>Public Playlists: {userProfile?.public_playlists || "N/A"}</span>
@@ -196,14 +196,14 @@ export const ProfilePage = ({ onLogout }) => {
                   </div>
                   <div className="mt-4">
                     <p className="font-semibold truncate text-white">{artist.name}</p>
-                    <p className="text-sm text-neutral-400 mt-1">Artist</p>
+                    <p className="text-sm text-neutral-200 mt-1">Artist</p>
                     {artist.genres && artist.genres.length > 0 && (
-                      <p className="text-xs text-neutral-500 mt-1 truncate">
+                      <p className="text-xs text-neutral-300 mt-1 truncate">
                         {artist.genres[0]}
                       </p>
                     )}
                     {/* Followers count */}
-                    <p className="text-xs text-neutral-400 mt-2">
+                    <p className="text-xs text-neutral-300 mt-2">
                       {artist.followers?.total?.toLocaleString() || 0} followers
                     </p>
                   </div>
