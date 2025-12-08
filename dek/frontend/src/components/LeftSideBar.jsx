@@ -11,7 +11,6 @@ import {
   UserIcon, 
   Cog6ToothIcon,
   HomeIcon,
-  UsersIcon,
   ChartBarIcon
 } from '@heroicons/react/24/solid';
 
@@ -19,7 +18,6 @@ import {
 const navLinks = [
   { name: 'Home', href: '/', icon: <HomeIcon className="h-7 w-7" /> },
   { name: 'Profile', href: '/profile', icon: <UserIcon className="h-7 w-7" /> },
-  { name: 'Friends', href: '/friends', icon: <UsersIcon className="h-7 w-7" /> },
   { name: 'Stats', href: '/stats', icon: <ChartBarIcon className="h-7 w-7" /> },
   { name: 'Settings', href: '/settings', icon: <Cog6ToothIcon className="h-7 w-7" /> },
 ];
@@ -37,22 +35,23 @@ export const LeftSidebar = () => {
 
       {/* Action Buttons (Like & Add) */}
       <div className="bg-neutral-900 rounded-xl p-2 flex flex-col items-center gap-2">
-        <a href="/liked" className="w-full aspect-square flex items-center justify-center rounded-lg bg-gradient-to-br from-indigo-600 to-cyan-400">
+        {/* FIXED: Changed from <a> to <Link> */}
+        <Link 
+          to="/liked" 
+          className="w-full aspect-square flex items-center justify-center rounded-lg bg-gradient-to-br from-indigo-600 to-cyan-400 hover:from-indigo-700 hover:to-cyan-500 transition-colors"
+        >
           <HeartIcon className="h-8 w-8" />
-        </a>
-        <button className="w-full aspect-square flex items-center justify-center rounded-lg bg-neutral-800 hover:bg-neutral-700 transition-colors">
-          <PlusIcon className="h-8 w-8" />
-        </button>
+        </Link>
       </div>
 
-      {/* Main Navigation Links (This is the new part) */}
+      {/* Main Navigation Links */}
       <div className="bg-neutral-900 rounded-xl p-2 flex flex-col items-center gap-2 flex-grow">
         {navLinks.map((link) => (
           <Link 
             key={link.name} 
             to={link.href} 
             className="w-full aspect-square flex items-center justify-center rounded-lg text-neutral-400 hover:bg-neutral-800 hover:text-white transition-colors"
-            title={link.name} // Adds a tooltip on hover
+            title={link.name}
           >
             {link.icon}
           </Link>

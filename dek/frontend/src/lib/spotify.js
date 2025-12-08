@@ -1,5 +1,16 @@
-const SPOTIFY_CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID || '693322d20f6840f3aff9e6b3d8a2f9e8';
-const REDIRECT_URI = import.meta.env.VITE_SPOTIFY_REDIRECT_URI || 'http://127.0.0.1:5176/callback';
+const SPOTIFY_CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
+const REDIRECT_URI = import.meta.env.VITE_SPOTIFY_REDIRECT_URI;
+
+// Debug: Add this to see what's happening
+console.log('🔍 ENV VARS:', {
+  clientId: import.meta.env.VITE_SPOTIFY_CLIENT_ID,
+  redirectUri: import.meta.env.VITE_SPOTIFY_REDIRECT_URI,
+  mode: import.meta.env.MODE
+});
+
+// Temporary: Use the values directly while debugging
+const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID || '693322d20f6840f3aff9e6b3d8a2f9e8';
+const redirectUri = import.meta.env.VITE_SPOTIFY_REDIRECT_URI || 'http://127.0.0.1:5176/callback';
 
 const SCOPES = [
   'user-read-private',
@@ -42,9 +53,9 @@ export async function redirectToSpotifyAuth() {
   
   const params = new URLSearchParams({
     response_type: 'code',
-    client_id: SPOTIFY_CLIENT_ID,
+    client_id: clientId,
     scope: SCOPES,
-    redirect_uri: REDIRECT_URI,
+    redirect_uri: redirectUri,
     state,
     code_challenge_method: 'S256',
     code_challenge: challenge,
@@ -72,8 +83,8 @@ export async function handleSpotifyCallback(code, state) {
     body: new URLSearchParams({
       grant_type: 'authorization_code',
       code,
-      redirect_uri: REDIRECT_URI,
-      client_id: SPOTIFY_CLIENT_ID,
+      redirect_uri: redirectUri,
+      client_id: clientId,
       code_verifier: codeVerifier,
     }),
   });
@@ -112,7 +123,7 @@ export async function refreshAccessToken() {
     body: new URLSearchParams({
       grant_type: 'refresh_token',
       refresh_token: refreshToken,
-      client_id: SPOTIFY_CLIENT_ID,
+      client_id: clientId,
     }),
   });
   
@@ -295,3 +306,19 @@ export function logoutSpotify() {
   localStorage.removeItem('spotify_auth_state');
   localStorage.removeItem('spotify_code_verifier');
 }
+
+// ========== ADD THESE SEARCH FUNCTIONS ==========
+
+/**
+ * Search for artists
+ */
+export const searchArtists = async (query, limit = 10) => {
+  return spotifyApiRequest(`/search?q=${encodeURIComponent(query)}&type=artist&limit=${limit}`);
+};
+
+/**
+ * Search for tracks
+ */
+export const searchTracks = async (query, limit = 10) => {
+  return spotifyApiRequest(`/search?q=${encodeURIComponent(query)}&type=track&limit=${limit}`);
+};
