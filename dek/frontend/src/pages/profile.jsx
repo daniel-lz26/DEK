@@ -5,7 +5,6 @@ import React, { useState, useEffect } from 'react';
 import { SearchBar } from '../components/SearchBar';
 import { LeftSidebar } from '../components/LeftSideBar';
 import { StatsSideBar } from '../components/StatsSideBar';
-import { FriendsSection } from '../components/FriendsSection';
 import { ListeningHistory } from '../components/ListeningHistory';
 import { GenreExplorer } from '../components/GenreExplorer';
 import { MusicTasteEvolution } from '../components/MusicTasteEvolution';
@@ -138,7 +137,7 @@ export const ProfilePage = ({ onLogout }) => {
           >
             Music Evolution
           </button>
-          <button
+          {/* <button
             onClick={() => setActiveTab('friends')}
             className={`pb-3 px-1 font-semibold transition-colors whitespace-nowrap ${
               activeTab === 'friends' 
@@ -147,7 +146,7 @@ export const ProfilePage = ({ onLogout }) => {
             }`}
           >
             Friends
-          </button>
+          </button> */}
         </div>
 
         {/* --- Content Based on Active Tab --- */}

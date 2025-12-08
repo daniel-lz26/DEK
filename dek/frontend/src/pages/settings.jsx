@@ -64,26 +64,9 @@ export const SettingsPage = ({ onLogout, isSpotifyConnected }) => {
                 </div>
                 </section>
 
-           {/* Account Settings Section */}
-          <section className="mb-10">
-            <h2 className="text-xl font-semibold border-b border-neutral-700 pb-2 mb-4">Account</h2>
-            <div className="flex justify-between items-center py-2">
-              <p>Email Address</p>
-              <span className="text-neutral-400">user@example.com</span>
-            </div>
-            <div className="flex justify-between items-center py-2">
-              <p>Password</p>
-              <button className="text-red-400 hover:underline">Change Password</button>
-            </div>
-          </section>
-
           {/* Appearance Settings Section */}
           <section>
             <h2 className="text-xl font-semibold border-b border-neutral-700 pb-2 mb-4">Appearance</h2>
-            <div className="flex justify-between items-center py-2">
-              <p>Dark Mode</p>
-              <ToggleSwitch />
-            </div>
             <div className="flex justify-between items-center py-2">
               <p>Language</p>
               <span className="text-neutral-400">English</span>

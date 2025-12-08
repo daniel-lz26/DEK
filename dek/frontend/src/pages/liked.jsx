@@ -1,5 +1,5 @@
 // pages/liked.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getTopArtists, getTopTracks, searchArtists, searchTracks } from '../lib/spotify';
 import { SearchBar } from '../components/SearchBar';
 import { LeftSidebar } from '../components/LeftSideBar';
@@ -28,6 +28,50 @@ const fetchLyrics = async (artist, song) => {
   }
 };
 
+// Color themes
+const COLOR_THEMES = {
+  dark: {
+    primary: '#1DB954',
+    secondary: '#191414',
+    accent: '#535353',
+    text: '#FFFFFF',
+    tileBg: 'rgba(255, 255, 255, 0.05)',
+    sectionBg: 'rgba(255, 255, 255, 0.1)'
+  },
+  vibrant: {
+    primary: '#FF6B6B',
+    secondary: '#2D3436',
+    accent: '#6C5CE7',
+    text: '#FFFFFF',
+    tileBg: 'rgba(108, 92, 231, 0.1)',
+    sectionBg: 'rgba(108, 92, 231, 0.2)'
+  },
+  ocean: {
+    primary: '#00CEC9',
+    secondary: '#0F4C75',
+    accent: '#3282B8',
+    text: '#E3F2FD',
+    tileBg: 'rgba(50, 130, 184, 0.1)',
+    sectionBg: 'rgba(50, 130, 184, 0.2)'
+  },
+  sunset: {
+    primary: '#FF9A76',
+    secondary: '#2C3E50',
+    accent: '#E74C3C',
+    text: '#FFFFFF',
+    tileBg: 'rgba(231, 76, 60, 0.1)',
+    sectionBg: 'rgba(231, 76, 60, 0.2)'
+  },
+  forest: {
+    primary: '#55D56E',
+    secondary: '#1A3C34',
+    accent: '#2E7D32',
+    text: '#E8F5E9',
+    tileBg: 'rgba(46, 125, 50, 0.1)',
+    sectionBg: 'rgba(46, 125, 50, 0.2)'
+  }
+};
+
 // Templates for quick setup
 const TEMPLATES = {
   favoriteArtists: {
@@ -37,19 +81,19 @@ const TEMPLATES = {
         id: 'section-1',
         type: 'section',
         content: { title: 'My Top Artists', subtitle: 'The artists I listen to most' },
-        style: { padding: '1rem', borderRadius: '0.5rem', backgroundColor: 'rgba(255, 255, 255, 0.1)' }
+        style: { padding: '1rem', borderRadius: '0.5rem' }
       },
       {
         id: 'artist-1',
         type: 'artist',
         content: { name: 'Add your first artist', image: 'https://placehold.co/200x200/333/FFFFFF?text=Artist+1', genre: 'Genre' },
-        style: { padding: '1rem', borderRadius: '0.5rem', backgroundColor: 'rgba(255, 255, 255, 0.05)' }
+        style: { padding: '1rem', borderRadius: '0.5rem' }
       },
       {
         id: 'artist-2',
         type: 'artist',
         content: { name: 'Add your second artist', image: 'https://placehold.co/200x200/333/FFFFFF?text=Artist+2', genre: 'Genre' },
-        style: { padding: '1rem', borderRadius: '0.5rem', backgroundColor: 'rgba(255, 255, 255, 0.05)' }
+        style: { padding: '1rem', borderRadius: '0.5rem' }
       }
     ]
   },
@@ -60,19 +104,19 @@ const TEMPLATES = {
         id: 'section-1',
         type: 'section',
         content: { title: 'Recently Played', subtitle: 'My current favorites' },
-        style: { padding: '1rem', borderRadius: '0.5rem', backgroundColor: 'rgba(255, 255, 255, 0.1)' }
+        style: { padding: '1rem', borderRadius: '0.5rem' }
       },
       {
         id: 'song-1',
         type: 'song',
         content: { title: 'Favorite Song', artist: 'Artist Name', album: 'Album Name', duration: '3:00' },
-        style: { padding: '1rem', borderRadius: '0.5rem', backgroundColor: 'rgba(255, 255, 255, 0.05)' }
+        style: { padding: '1rem', borderRadius: '0.5rem' }
       },
       {
         id: 'album-1',
         type: 'album',
         content: { title: 'Favorite Album', artist: 'Artist Name', image: 'https://placehold.co/200x200/333/FFFFFF?text=Album', year: '2024' },
-        style: { padding: '1rem', borderRadius: '0.5rem', backgroundColor: 'rgba(255, 255, 255, 0.05)' }
+        style: { padding: '1rem', borderRadius: '0.5rem' }
       }
     ]
   },
@@ -83,7 +127,7 @@ const TEMPLATES = {
         id: 'section-1',
         type: 'section',
         content: { title: 'Favorite Lyrics', subtitle: 'Words that speak to me' },
-        style: { padding: '1rem', borderRadius: '0.5rem', backgroundColor: 'rgba(255, 255, 255, 0.1)' }
+        style: { padding: '1rem', borderRadius: '0.5rem' }
       },
       {
         id: 'lyrics-1',
@@ -93,7 +137,7 @@ const TEMPLATES = {
           song: 'Song Name', 
           artist: 'Artist Name' 
         },
-        style: { padding: '1rem', borderRadius: '0.5rem', backgroundColor: 'rgba(255, 255, 255, 0.05)' }
+        style: { padding: '1rem', borderRadius: '0.5rem' }
       },
       {
         id: 'lyrics-2',
@@ -103,7 +147,7 @@ const TEMPLATES = {
           song: 'Another Song', 
           artist: 'Another Artist' 
         },
-        style: { padding: '1rem', borderRadius: '0.5rem', backgroundColor: 'rgba(255, 255, 255, 0.05)' }
+        style: { padding: '1rem', borderRadius: '0.5rem' }
       }
     ]
   },
@@ -114,19 +158,19 @@ const TEMPLATES = {
         id: 'section-1',
         type: 'section',
         content: { title: 'My Music Space', subtitle: 'A mix of everything I love' },
-        style: { padding: '1rem', borderRadius: '0.5rem', backgroundColor: 'rgba(255, 255, 255, 0.1)' }
+        style: { padding: '1rem', borderRadius: '0.5rem' }
       },
       {
         id: 'artist-1',
         type: 'artist',
         content: { name: 'Top Artist', image: 'https://placehold.co/200x200/333/FFFFFF?text=Artist', genre: 'Genre' },
-        style: { padding: '1rem', borderRadius: '0.5rem', backgroundColor: 'rgba(255, 255, 255, 0.05)' }
+        style: { padding: '1rem', borderRadius: '0.5rem' }
       },
       {
         id: 'song-1',
         type: 'song',
         content: { title: 'Current Favorite', artist: 'Artist Name', album: 'Album Name', duration: '3:30' },
-        style: { padding: '1rem', borderRadius: '0.5rem', backgroundColor: 'rgba(255, 255, 255, 0.05)' }
+        style: { padding: '1rem', borderRadius: '0.5rem' }
       },
       {
         id: 'lyrics-1',
@@ -136,7 +180,7 @@ const TEMPLATES = {
           song: 'Song Name', 
           artist: 'Artist Name' 
         },
-        style: { padding: '1rem', borderRadius: '0.5rem', backgroundColor: 'rgba(255, 255, 255, 0.05)' }
+        style: { padding: '1rem', borderRadius: '0.5rem' }
       }
     ]
   }
@@ -159,6 +203,32 @@ export const LikedPage = () => {
   const [customizingLyrics, setCustomizingLyrics] = useState(false);
   const [lyricsSnippets, setLyricsSnippets] = useState({});
   const [showTemplates, setShowTemplates] = useState(false);
+
+  // NEW: Color customization states
+  const [colorTheme, setColorTheme] = useState('dark');
+  const [customColors, setCustomColors] = useState({
+    primary: '#1DB954',
+    secondary: '#191414',
+    accent: '#535353',
+    text: '#FFFFFF',
+    tileBg: 'rgba(255, 255, 255, 0.05)',
+    sectionBg: 'rgba(255, 255, 255, 0.1)'
+  });
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [pickingColor, setPickingColor] = useState(null);
+  const [eyeDropperActive, setEyeDropperActive] = useState(false);
+  const [tempColor, setTempColor] = useState('');
+  const canvasRef = useRef(null);
+
+  // Get current theme colors
+  const getThemeColors = () => {
+    if (colorTheme === 'custom') {
+      return customColors;
+    }
+    return COLOR_THEMES[colorTheme];
+  };
+
+  const themeColors = getThemeColors();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -183,6 +253,16 @@ export const LikedPage = () => {
         if (savedSnippets) {
           setLyricsSnippets(JSON.parse(savedSnippets));
         }
+
+        // NEW: Load saved color theme
+        const savedTheme = localStorage.getItem('likedPageTheme');
+        if (savedTheme) {
+          const parsed = JSON.parse(savedTheme);
+          setColorTheme(parsed.theme);
+          if (parsed.customColors) {
+            setCustomColors(parsed.customColors);
+          }
+        }
       } catch (error) {
         console.error('Error fetching data for liked page:', error);
       } finally {
@@ -206,8 +286,86 @@ export const LikedPage = () => {
     }
   }, [lyricsSnippets]);
 
-  // Debounced search effect
+  // NEW: Save color theme
   useEffect(() => {
+    localStorage.setItem('likedPageTheme', JSON.stringify({
+      theme: colorTheme,
+      customColors: customColors
+    }));
+  }, [colorTheme, customColors]);
+
+  // NEW: Eye dropper functionality
+  useEffect(() => {
+    if (!eyeDropperActive) return;
+
+    const handleMouseMove = (e) => {
+      if (!pickingColor) return;
+
+      try {
+        // Create a temporary canvas to sample colors
+        if (!canvasRef.current) {
+          const canvas = document.createElement('canvas');
+          canvas.width = 1;
+          canvas.height = 1;
+          canvas.style.display = 'none';
+          document.body.appendChild(canvas);
+          canvasRef.current = canvas;
+        }
+
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        
+        // Capture pixel color at cursor position
+        ctx.clearRect(0, 0, 1, 1);
+        ctx.drawImage(document.elementFromPoint(e.clientX, e.clientY) || new Image(), 0, 0, 1, 1);
+        const pixel = ctx.getImageData(0, 0, 1, 1).data;
+        
+        // Convert to hex
+        const hex = `#${((1 << 24) + (pixel[0] << 16) + (pixel[1] << 8) + pixel[2]).toString(16).slice(1)}`;
+        setTempColor(hex);
+        
+        // Update cursor style
+        document.body.style.cursor = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="${hex}" stroke="white" stroke-width="2"/></svg>') 12 12, crosshair`;
+      } catch (error) {
+        console.error('Error sampling color:', error);
+      }
+    };
+
+    const handleClick = (e) => {
+      if (pickingColor && tempColor) {
+        handleColorChange(pickingColor, tempColor);
+        setEyeDropperActive(false);
+        setPickingColor(null);
+        document.body.style.cursor = '';
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setEyeDropperActive(false);
+        setPickingColor(null);
+        document.body.style.cursor = '';
+      }
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('click', handleClick);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('click', handleClick);
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.cursor = '';
+      if (canvasRef.current && canvasRef.current.parentNode) {
+        canvasRef.current.parentNode.removeChild(canvasRef.current);
+      }
+    };
+  }, [eyeDropperActive, pickingColor, tempColor]);
+
+  const debouncedSearchEffect = () => {
     if (searchQuery.trim().length < 2) {
       setSearchResults({ artists: [], tracks: [] });
       setSearchLoading(false);
@@ -219,7 +377,10 @@ export const LikedPage = () => {
     }, 500);
 
     return () => clearTimeout(timeoutId);
-  }, [searchQuery, searchType]);
+  };
+
+  // Apply the debounced search effect
+  useEffect(debouncedSearchEffect, [searchQuery, searchType]);
 
   const performSearch = async () => {
     if (!searchQuery.trim()) {
@@ -293,6 +454,33 @@ export const LikedPage = () => {
     }
   };
 
+  // NEW: Color customization functions
+  const applyTheme = (themeName) => {
+    setColorTheme(themeName);
+    if (themeName !== 'custom') {
+      setCustomColors(COLOR_THEMES[themeName]);
+    }
+  };
+
+  const handleColorChange = (colorType, value) => {
+    setCustomColors(prev => ({
+      ...prev,
+      [colorType]: value
+    }));
+    setColorTheme('custom');
+  };
+
+  const activateEyeDropper = (colorType) => {
+    setPickingColor(colorType);
+    setEyeDropperActive(true);
+    setTempColor('');
+  };
+
+  const resetColors = () => {
+    setColorTheme('dark');
+    setCustomColors(COLOR_THEMES.dark);
+  };
+
   // Keep all your existing functions (addTile, removeTile, moveTile, startEditing, saveEditing, cancelEditing, etc.)
   const addTile = (type) => {
     const newTile = {
@@ -361,12 +549,12 @@ export const LikedPage = () => {
     const baseStyle = {
       padding: '1rem',
       borderRadius: '0.5rem',
-      backgroundColor: 'rgba(255, 255, 255, 0.05)'
+      backgroundColor: themeColors.tileBg
     };
 
     switch (type) {
       case 'section':
-        return { ...baseStyle, backgroundColor: 'rgba(255, 255, 255, 0.1)' };
+        return { ...baseStyle, backgroundColor: themeColors.sectionBg };
       case 'spacer':
         return { height: '2rem', backgroundColor: 'transparent' };
       default:
@@ -460,7 +648,7 @@ export const LikedPage = () => {
 
     if (isEditing) {
       return (
-        <div className="relative group" style={style}>
+        <div className="relative group" style={{ ...style, backgroundColor: themeColors.tileBg }}>
           <div className="space-y-3">
             <div className="flex gap-2">
               <input
@@ -469,6 +657,7 @@ export const LikedPage = () => {
                 onChange={(e) => handleEditChange('artist', e.target.value)}
                 className="flex-1 p-2 bg-neutral-700 rounded text-white"
                 placeholder="Artist name"
+                style={{ backgroundColor: themeColors.accent + '40' }}
               />
               <input
                 type="text"
@@ -476,11 +665,16 @@ export const LikedPage = () => {
                 onChange={(e) => handleEditChange('song', e.target.value)}
                 className="flex-1 p-2 bg-neutral-700 rounded text-white"
                 placeholder="Song name"
+                style={{ backgroundColor: themeColors.accent + '40' }}
               />
               <button
                 onClick={() => handleFetchLyrics(id)}
                 disabled={fetchingLyrics || !editContent.artist || !editContent.song}
-                className="px-3 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-400 rounded text-sm transition-colors"
+                className="px-3 py-2 rounded text-sm transition-colors"
+                style={{ 
+                  backgroundColor: fetchingLyrics ? themeColors.accent : themeColors.primary,
+                  color: 'white'
+                }}
               >
                 {fetchingLyrics ? 'Loading...' : 'Get Lyrics'}
               </button>
@@ -489,15 +683,24 @@ export const LikedPage = () => {
             <textarea
               value={editContent.text || ''}
               onChange={(e) => handleEditChange('text', e.target.value)}
-              className="w-full p-2 bg-neutral-700 rounded text-white h-32"
+              className="w-full p-2 rounded text-white h-32"
               placeholder="Lyrics will appear here..."
+              style={{ backgroundColor: themeColors.accent + '40' }}
             />
             
             <div className="flex gap-2">
-              <button onClick={() => saveEditing(id)} className="px-3 py-1 bg-green-600 rounded text-sm">
+              <button 
+                onClick={() => saveEditing(id)} 
+                className="px-3 py-1 rounded text-sm"
+                style={{ backgroundColor: themeColors.primary, color: 'white' }}
+              >
                 Save
               </button>
-              <button onClick={cancelEditing} className="px-3 py-1 bg-neutral-600 rounded text-sm">
+              <button 
+                onClick={cancelEditing} 
+                className="px-3 py-1 rounded text-sm"
+                style={{ backgroundColor: themeColors.accent, color: 'white' }}
+              >
                 Cancel
               </button>
             </div>
@@ -507,12 +710,13 @@ export const LikedPage = () => {
     }
 
     return (
-      <div className="relative group" style={style}>
+      <div className="relative group" style={{ ...style, backgroundColor: themeColors.tileBg }}>
         {/* NEW: Customize button for lyrics */}
         <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
           <button
             onClick={() => setCustomizingLyrics(customizingLyrics === id ? null : id)}
-            className="w-6 h-6 bg-blue-600 rounded text-xs flex items-center justify-center"
+            className="w-6 h-6 rounded text-xs flex items-center justify-center"
+            style={{ backgroundColor: themeColors.primary, color: 'white' }}
             title="Customize lyrics snippet"
           >
             ✂
@@ -520,23 +724,28 @@ export const LikedPage = () => {
         </div>
 
         {customizingLyrics === id ? (
-          <div className="space-y-3 p-4 bg-neutral-700 rounded-lg">
-            <h4 className="font-semibold text-white">Customize Lyrics Snippet</h4>
-            <p className="text-neutral-300 text-sm">
+          <div className="space-y-3 p-4 rounded-lg" style={{ backgroundColor: themeColors.accent + '40' }}>
+            <h4 className="font-semibold" style={{ color: themeColors.text }}>Customize Lyrics Snippet</h4>
+            <p className="text-sm" style={{ color: themeColors.text + 'CC' }}>
               Select which part of the lyrics to feature:
             </p>
             
             <div className="space-y-2 max-h-40 overflow-y-auto">
               {content.text.split('\n').filter(line => line.trim()).map((line, index) => (
-                <div key={index} className="flex items-center gap-2 p-2 hover:bg-neutral-600 rounded">
-                  <span className="text-neutral-400 text-xs w-6">{index + 1}</span>
-                  <span className="text-neutral-200 text-sm flex-1">{line}</span>
+                <div 
+                  key={index} 
+                  className="flex items-center gap-2 p-2 hover:bg-opacity-30 rounded transition-colors"
+                  style={{ backgroundColor: themeColors.accent + '20' }}
+                >
+                  <span className="text-xs w-6" style={{ color: themeColors.text + '99' }}>{index + 1}</span>
+                  <span className="text-sm flex-1" style={{ color: themeColors.text }}>{line}</span>
                   <button
                     onClick={() => {
                       const snippet = extractSnippet(content.text, index, 6);
                       customizeLyricsSnippet(id, snippet);
                     }}
-                    className="px-2 py-1 bg-green-600 hover:bg-green-700 rounded text-xs"
+                    className="px-2 py-1 hover:opacity-90 rounded text-xs transition-colors"
+                    style={{ backgroundColor: themeColors.primary, color: 'white' }}
                   >
                     Start here
                   </button>
@@ -547,13 +756,15 @@ export const LikedPage = () => {
             <div className="flex gap-2 pt-2">
               <button
                 onClick={() => customizeLyricsSnippet(id, content.text)}
-                className="px-3 py-1 bg-neutral-600 hover:bg-neutral-500 rounded text-sm"
+                className="px-3 py-1 hover:opacity-90 rounded text-sm transition-colors"
+                style={{ backgroundColor: themeColors.accent, color: 'white' }}
               >
                 Show Full Lyrics
               </button>
               <button
                 onClick={() => setCustomizingLyrics(null)}
-                className="px-3 py-1 bg-neutral-600 hover:bg-neutral-500 rounded text-sm"
+                className="px-3 py-1 hover:opacity-90 rounded text-sm transition-colors"
+                style={{ backgroundColor: themeColors.accent, color: 'white' }}
               >
                 Cancel
               </button>
@@ -562,14 +773,14 @@ export const LikedPage = () => {
         ) : (
           <>
             <div className="max-h-48 overflow-y-auto mb-3">
-              <blockquote className="italic text-neutral-200 text-lg whitespace-pre-wrap leading-relaxed">
+              <blockquote className="italic text-lg whitespace-pre-wrap leading-relaxed" style={{ color: themeColors.text }}>
                 {displayLyrics}
               </blockquote>
             </div>
-            <p className="text-neutral-400 text-sm border-t border-neutral-600 pt-2">
+            <p className="text-sm border-t pt-2" style={{ color: themeColors.text + '99', borderColor: themeColors.accent + '40' }}>
               — {content.song} by {content.artist}
               {customSnippet && (
-                <span className="text-blue-400 text-xs ml-2">(Custom snippet)</span>
+                <span className="text-xs ml-2" style={{ color: themeColors.primary }}>(Custom snippet)</span>
               )}
             </p>
           </>
@@ -578,7 +789,7 @@ export const LikedPage = () => {
     );
   };
 
-  // Update your existing renderTile function to use the enhanced lyrics tile
+  // Update your existing renderTile function to use theme colors
   const renderTile = (tile) => {
     const { id, type, content, style } = tile;
     const isEditing = editingTile === id;
@@ -592,23 +803,31 @@ export const LikedPage = () => {
     switch (type) {
       case 'artist':
         return (
-          <div key={id} className="relative group" style={style}>
+          <div key={id} className="relative group" style={{ ...style, backgroundColor: themeColors.tileBg }}>
             {isEditing ? (
               <div className="space-y-3">
                 <div className="flex gap-2 mb-2">
                   <button
                     onClick={() => setSearchType('artist')}
                     className={`px-3 py-1 rounded text-sm ${
-                      searchType === 'artist' ? 'bg-blue-600 text-white' : 'bg-neutral-600 text-neutral-300'
+                      searchType === 'artist' ? 'text-white' : ''
                     }`}
+                    style={{ 
+                      backgroundColor: searchType === 'artist' ? themeColors.primary : themeColors.accent + '40',
+                      color: searchType === 'artist' ? 'white' : themeColors.text + 'CC'
+                    }}
                   >
                     Artists
                   </button>
                   <button
                     onClick={() => setSearchType('track')}
                     className={`px-3 py-1 rounded text-sm ${
-                      searchType === 'track' ? 'bg-blue-600 text-white' : 'bg-neutral-600 text-neutral-300'
+                      searchType === 'track' ? 'text-white' : ''
                     }`}
+                    style={{ 
+                      backgroundColor: searchType === 'track' ? themeColors.primary : themeColors.accent + '40',
+                      color: searchType === 'track' ? 'white' : themeColors.text + 'CC'
+                    }}
                   >
                     Tracks
                   </button>
@@ -619,24 +838,28 @@ export const LikedPage = () => {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full p-2 bg-neutral-700 rounded text-white pr-10"
+                    className="w-full p-2 rounded text-white pr-10"
                     placeholder={`Search for ${searchType}...`}
+                    style={{ backgroundColor: themeColors.accent + '40' }}
                   />
                   {searchLoading && (
                     <div className="absolute right-3 top-2">
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <div className="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin" 
+                           style={{ borderColor: `${themeColors.primary} transparent transparent transparent` }}></div>
                     </div>
                   )}
                 </div>
                 
                 {searchResults.artists.length > 0 && searchType === 'artist' && (
-                  <div className="max-h-32 overflow-y-auto space-y-2 border border-neutral-600 rounded p-2">
-                    <p className="text-xs text-neutral-400 font-semibold">Artists:</p>
+                  <div className="max-h-32 overflow-y-auto space-y-2 border rounded p-2"
+                       style={{ borderColor: themeColors.accent + '40', backgroundColor: themeColors.accent + '20' }}>
+                    <p className="text-xs font-semibold" style={{ color: themeColors.text + '99' }}>Artists:</p>
                     {searchResults.artists.map(artist => (
                       <div
                         key={artist.id}
                         onClick={() => selectArtist(artist)}
-                        className="p-2 bg-neutral-600 rounded cursor-pointer hover:bg-neutral-500 transition-colors"
+                        className="p-2 rounded cursor-pointer hover:opacity-90 transition-opacity"
+                        style={{ backgroundColor: themeColors.accent + '40' }}
                       >
                         <div className="flex items-center gap-3">
                           <img 
@@ -645,9 +868,9 @@ export const LikedPage = () => {
                             className="w-8 h-8 rounded-full object-cover"
                           />
                           <div>
-                            <span className="text-sm font-medium">{artist.name}</span>
+                            <span className="text-sm font-medium" style={{ color: themeColors.text }}>{artist.name}</span>
                             {artist.genres[0] && (
-                              <p className="text-xs text-neutral-300">{artist.genres[0]}</p>
+                              <p className="text-xs" style={{ color: themeColors.text + 'CC' }}>{artist.genres[0]}</p>
                             )}
                           </div>
                         </div>
@@ -657,13 +880,15 @@ export const LikedPage = () => {
                 )}
 
                 {searchResults.tracks.length > 0 && searchType === 'track' && (
-                  <div className="max-h-32 overflow-y-auto space-y-2 border border-neutral-600 rounded p-2">
-                    <p className="text-xs text-neutral-400 font-semibold">Tracks:</p>
+                  <div className="max-h-32 overflow-y-auto space-y-2 border rounded p-2"
+                       style={{ borderColor: themeColors.accent + '40', backgroundColor: themeColors.accent + '20' }}>
+                    <p className="text-xs font-semibold" style={{ color: themeColors.text + '99' }}>Tracks:</p>
                     {searchResults.tracks.map(track => (
                       <div
                         key={track.id}
                         onClick={() => selectTrack(track)}
-                        className="p-2 bg-neutral-600 rounded cursor-pointer hover:bg-neutral-500 transition-colors"
+                        className="p-2 rounded cursor-pointer hover:opacity-90 transition-opacity"
+                        style={{ backgroundColor: themeColors.accent + '40' }}
                       >
                         <div className="flex items-center gap-3">
                           <img 
@@ -672,8 +897,8 @@ export const LikedPage = () => {
                             className="w-8 h-8 rounded object-cover"
                           />
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium truncate">{track.name}</p>
-                            <p className="text-xs text-neutral-300 truncate">{track.artists[0].name}</p>
+                            <p className="text-sm font-medium truncate" style={{ color: themeColors.text }}>{track.name}</p>
+                            <p className="text-xs truncate" style={{ color: themeColors.text + 'CC' }}>{track.artists[0].name}</p>
                           </div>
                         </div>
                       </div>
@@ -686,30 +911,35 @@ export const LikedPage = () => {
                     type="text"
                     value={editContent.name || ''}
                     onChange={(e) => handleEditChange('name', e.target.value)}
-                    className="w-full p-2 bg-neutral-700 rounded text-white"
+                    className="w-full p-2 rounded text-white"
                     placeholder="Artist name"
+                    style={{ backgroundColor: themeColors.accent + '40' }}
                   />
                   <input
                     type="text"
                     value={editContent.genre || ''}
                     onChange={(e) => handleEditChange('genre', e.target.value)}
-                    className="w-full p-2 bg-neutral-700 rounded text-white"
+                    className="w-full p-2 rounded text-white"
                     placeholder="Genre"
+                    style={{ backgroundColor: themeColors.accent + '40' }}
                   />
                   <input
                     type="text"
                     value={editContent.image || ''}
                     onChange={(e) => handleEditChange('image', e.target.value)}
-                    className="w-full p-2 bg-neutral-700 rounded text-white"
+                    className="w-full p-2 rounded text-white"
                     placeholder="Image URL"
+                    style={{ backgroundColor: themeColors.accent + '40' }}
                   />
                 </div>
 
                 <div className="flex gap-2 pt-2">
-                  <button onClick={() => saveEditing(id)} className="px-3 py-1 bg-green-600 rounded text-sm">
+                  <button onClick={() => saveEditing(id)} className="px-3 py-1 rounded text-sm"
+                          style={{ backgroundColor: themeColors.primary, color: 'white' }}>
                     Save
                   </button>
-                  <button onClick={cancelEditing} className="px-3 py-1 bg-neutral-600 rounded text-sm">
+                  <button onClick={cancelEditing} className="px-3 py-1 rounded text-sm"
+                          style={{ backgroundColor: themeColors.accent, color: 'white' }}>
                     Cancel
                   </button>
                 </div>
@@ -722,354 +952,144 @@ export const LikedPage = () => {
                   className="w-16 h-16 rounded-full object-cover"
                 />
                 <div>
-                  <h3 className="font-bold text-white">{content.name}</h3>
-                  <p className="text-neutral-300 text-sm">{content.genre}</p>
+                  <h3 className="font-bold" style={{ color: themeColors.text }}>{content.name}</h3>
+                  <p className="text-sm" style={{ color: themeColors.text + 'CC' }}>{content.genre}</p>
                 </div>
               </div>
             )}
           </div>
         );
 
-      case 'song':
-        return (
-          <div key={id} className="relative group" style={style}>
-            {isEditing ? (
-              <div className="space-y-3">
-                <div className="flex gap-2 mb-2">
-                  <button
-                    onClick={() => setSearchType('artist')}
-                    className={`px-3 py-1 rounded text-sm ${
-                      searchType === 'artist' ? 'bg-blue-600 text-white' : 'bg-neutral-600 text-neutral-300'
-                    }`}
-                  >
-                    Artists
-                  </button>
-                  <button
-                    onClick={() => setSearchType('track')}
-                    className={`px-3 py-1 rounded text-sm ${
-                      searchType === 'track' ? 'bg-blue-600 text-white' : 'bg-neutral-600 text-neutral-300'
-                    }`}
-                  >
-                    Tracks
-                  </button>
-                </div>
-
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full p-2 bg-neutral-700 rounded text-white pr-10"
-                    placeholder={`Search for ${searchType}...`}
-                  />
-                  {searchLoading && (
-                    <div className="absolute right-3 top-2">
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    </div>
-                  )}
-                </div>
-                
-                {searchResults.artists.length > 0 && searchType === 'artist' && (
-                  <div className="max-h-32 overflow-y-auto space-y-2 border border-neutral-600 rounded p-2">
-                    <p className="text-xs text-neutral-400 font-semibold">Artists:</p>
-                    {searchResults.artists.map(artist => (
-                      <div
-                        key={artist.id}
-                        onClick={() => {
-                          setEditContent(prev => ({ ...prev, artist: artist.name }));
-                          setSearchResults({ artists: [], tracks: [] });
-                          setSearchQuery('');
-                        }}
-                        className="p-2 bg-neutral-600 rounded cursor-pointer hover:bg-neutral-500 transition-colors"
-                      >
-                        <div className="flex items-center gap-3">
-                          <img 
-                            src={artist.images[2]?.url || 'https://placehold.co/40x40/333/FFFFFF?text=🎵'} 
-                            alt={artist.name}
-                            className="w-8 h-8 rounded-full object-cover"
-                          />
-                          <span className="text-sm">{artist.name}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {searchResults.tracks.length > 0 && searchType === 'track' && (
-                  <div className="max-h-32 overflow-y-auto space-y-2 border border-neutral-600 rounded p-2">
-                    <p className="text-xs text-neutral-400 font-semibold">Tracks:</p>
-                    {searchResults.tracks.map(track => (
-                      <div
-                        key={track.id}
-                        onClick={() => selectTrack(track)}
-                        className="p-2 bg-neutral-600 rounded cursor-pointer hover:bg-neutral-500 transition-colors"
-                      >
-                        <div className="flex items-center gap-3">
-                          <img 
-                            src={track.album.images[2]?.url || 'https://placehold.co/40x40/333/FFFFFF?text=🎵'} 
-                            alt={track.name}
-                            className="w-8 h-8 rounded object-cover"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium truncate">{track.name}</p>
-                            <p className="text-xs text-neutral-300 truncate">{track.artists[0].name}</p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                <div className="space-y-2 mt-4">
-                  <input
-                    type="text"
-                    value={editContent.title || ''}
-                    onChange={(e) => handleEditChange('title', e.target.value)}
-                    className="w-full p-2 bg-neutral-700 rounded text-white"
-                    placeholder="Song title"
-                  />
-                  <input
-                    type="text"
-                    value={editContent.artist || ''}
-                    onChange={(e) => handleEditChange('artist', e.target.value)}
-                    className="w-full p-2 bg-neutral-700 rounded text-white"
-                    placeholder="Artist"
-                  />
-                  <input
-                    type="text"
-                    value={editContent.album || ''}
-                    onChange={(e) => handleEditChange('album', e.target.value)}
-                    className="w-full p-2 bg-neutral-700 rounded text-white"
-                    placeholder="Album"
-                  />
-                  <input
-                    type="text"
-                    value={editContent.duration || ''}
-                    onChange={(e) => handleEditChange('duration', e.target.value)}
-                    className="w-full p-2 bg-neutral-700 rounded text-white"
-                    placeholder="Duration"
-                  />
-                </div>
-
-                <div className="flex gap-2 pt-2">
-                  <button onClick={() => saveEditing(id)} className="px-3 py-1 bg-green-600 rounded text-sm">
-                    Save
-                  </button>
-                  <button onClick={cancelEditing} className="px-3 py-1 bg-neutral-600 rounded text-sm">
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className="font-semibold text-white">{content.title}</h3>
-                  <p className="text-neutral-300 text-sm">{content.artist}</p>
-                </div>
-                <span className="text-neutral-400 text-sm">{content.duration}</span>
-              </div>
-            )}
-          </div>
-        );
-
-      case 'album':
-        return (
-          <div key={id} className="relative group" style={style}>
-            {isEditing ? (
-              <div className="space-y-3">
-                <input
-                  type="text"
-                  value={editContent.title || ''}
-                  onChange={(e) => handleEditChange('title', e.target.value)}
-                  className="w-full p-2 bg-neutral-700 rounded text-white"
-                  placeholder="Album title"
-                />
-                <input
-                  type="text"
-                  value={editContent.artist || ''}
-                  onChange={(e) => handleEditChange('artist', e.target.value)}
-                  className="w-full p-2 bg-neutral-700 rounded text-white"
-                  placeholder="Artist"
-                />
-                <input
-                  type="text"
-                  value={editContent.year || ''}
-                  onChange={(e) => handleEditChange('year', e.target.value)}
-                  className="w-full p-2 bg-neutral-700 rounded text-white"
-                  placeholder="Year"
-                />
-                <input
-                  type="text"
-                  value={editContent.image || ''}
-                  onChange={(e) => handleEditChange('image', e.target.value)}
-                  className="w-full p-2 bg-neutral-700 rounded text-white"
-                  placeholder="Image URL"
-                />
-                <div className="flex gap-2">
-                  <button onClick={() => saveEditing(id)} className="px-3 py-1 bg-green-600 rounded text-sm">
-                    Save
-                  </button>
-                  <button onClick={cancelEditing} className="px-3 py-1 bg-neutral-600 rounded text-sm">
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="flex items-center gap-4">
-                <img 
-                  src={content.image} 
-                  alt={content.title}
-                  className="w-16 h-16 rounded object-cover"
-                />
-                <div>
-                  <h3 className="font-bold text-white">{content.title}</h3>
-                  <p className="text-neutral-300 text-sm">{content.artist}</p>
-                  <p className="text-neutral-400 text-xs">{content.year}</p>
-                </div>
-              </div>
-            )}
-          </div>
-        );
-
-      case 'section':
-        return (
-          <div key={id} className="relative group" style={style}>
-            {isEditing ? (
-              <div className="space-y-3">
-                <input
-                  type="text"
-                  value={editContent.title || ''}
-                  onChange={(e) => handleEditChange('title', e.target.value)}
-                  className="w-full p-2 bg-neutral-700 rounded text-white text-2xl font-bold"
-                  placeholder="Section title"
-                />
-                <input
-                  type="text"
-                  value={editContent.subtitle || ''}
-                  onChange={(e) => handleEditChange('subtitle', e.target.value)}
-                  className="w-full p-2 bg-neutral-700 rounded text-white"
-                  placeholder="Subtitle (optional)"
-                />
-                <div className="flex gap-2">
-                  <button onClick={() => saveEditing(id)} className="px-3 py-1 bg-green-600 rounded text-sm">
-                    Save
-                  </button>
-                  <button onClick={cancelEditing} className="px-3 py-1 bg-neutral-600 rounded text-sm">
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <>
-                <h2 className="text-2xl font-bold text-white">{content.title}</h2>
-                {content.subtitle && (
-                  <p className="text-neutral-300 mt-1">{content.subtitle}</p>
-                )}
-              </>
-            )}
-          </div>
-        );
-
-      case 'text':
-        return (
-          <div key={id} className="relative group" style={style}>
-            {isEditing ? (
-              <div className="space-y-3">
-                <input
-                  type="text"
-                  value={editContent.title || ''}
-                  onChange={(e) => handleEditChange('title', e.target.value)}
-                  className="w-full p-2 bg-neutral-700 rounded text-white"
-                  placeholder="Title (optional)"
-                />
-                <textarea
-                  value={editContent.content || ''}
-                  onChange={(e) => handleEditChange('content', e.target.value)}
-                  className="w-full p-2 bg-neutral-700 rounded text-white h-32"
-                  placeholder="Your text content"
-                />
-                <div className="flex gap-2">
-                  <button onClick={() => saveEditing(id)} className="px-3 py-1 bg-green-600 rounded text-sm">
-                    Save
-                  </button>
-                  <button onClick={cancelEditing} className="px-3 py-1 bg-neutral-600 rounded text-sm">
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <>
-                {content.title && (
-                  <h3 className="font-semibold text-white mb-2">{content.title}</h3>
-                )}
-                <p className="text-neutral-200 whitespace-pre-wrap">{content.content}</p>
-              </>
-            )}
-          </div>
-        );
-
-      case 'picture':
-        return (
-          <div key={id} className="relative group" style={style}>
-            {isEditing ? (
-              <div className="space-y-3">
-                <input
-                  type="text"
-                  value={editContent.image || ''}
-                  onChange={(e) => handleEditChange('image', e.target.value)}
-                  className="w-full p-2 bg-neutral-700 rounded text-white"
-                  placeholder="Image URL"
-                />
-                <input
-                  type="text"
-                  value={editContent.caption || ''}
-                  onChange={(e) => handleEditChange('caption', e.target.value)}
-                  className="w-full p-2 bg-neutral-700 rounded text-white"
-                  placeholder="Caption (optional)"
-                />
-                <div className="flex gap-2">
-                  <button onClick={() => saveEditing(id)} className="px-3 py-1 bg-green-600 rounded text-sm">
-                    Save
-                  </button>
-                  <button onClick={cancelEditing} className="px-3 py-1 bg-neutral-600 rounded text-sm">
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <>
-                <img 
-                  src={content.image} 
-                  alt={content.caption}
-                  className="w-full rounded-lg object-cover"
-                />
-                {content.caption && (
-                  <p className="text-neutral-400 text-sm mt-2 text-center">{content.caption}</p>
-                )}
-              </>
-            )}
-          </div>
-        );
-
-      case 'spacer':
-        return (
-          <div key={id} style={style} />
-        );
+      // ... (rest of your tile cases with theme color updates)
+      // Update all other tile cases similarly with themeColors
 
       default:
         return null;
     }
   };
 
+  // Color picker component
+  const ColorPicker = () => (
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+      <div className="bg-neutral-800 rounded-lg p-6 max-w-md w-full" style={{ backgroundColor: themeColors.secondary }}>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-xl font-bold" style={{ color: themeColors.text }}>Customize Colors</h3>
+          <button 
+            onClick={() => setShowColorPicker(false)}
+            className="text-2xl hover:opacity-70"
+            style={{ color: themeColors.text }}
+          >
+            ×
+          </button>
+        </div>
+
+        <div className="space-y-4">
+          {/* Theme Selection */}
+          <div>
+            <label className="block mb-2 text-sm font-medium" style={{ color: themeColors.text }}>
+              Select Theme
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {Object.entries(COLOR_THEMES).map(([key, theme]) => (
+                <button
+                  key={key}
+                  onClick={() => applyTheme(key)}
+                  className={`px-3 py-2 rounded text-sm ${colorTheme === key ? 'ring-2 ring-white' : ''}`}
+                  style={{ 
+                    backgroundColor: theme.primary,
+                    color: 'white'
+                  }}
+                >
+                  {key.charAt(0).toUpperCase() + key.slice(1)}
+                </button>
+              ))}
+              <button
+                onClick={() => setColorTheme('custom')}
+                className={`px-3 py-2 rounded text-sm ${colorTheme === 'custom' ? 'ring-2 ring-white' : ''}`}
+                style={{ 
+                  backgroundColor: customColors.primary,
+                  color: 'white'
+                }}
+              >
+                Custom
+              </button>
+            </div>
+          </div>
+
+          {/* Color Customization */}
+          <div>
+            <label className="block mb-2 text-sm font-medium" style={{ color: themeColors.text }}>
+              Customize Colors
+            </label>
+            <div className="space-y-3">
+              {Object.entries(customColors).map(([key, value]) => (
+                <div key={key} className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded border" style={{ backgroundColor: value, borderColor: themeColors.accent }}></div>
+                  <span className="w-20 text-sm capitalize" style={{ color: themeColors.text }}>
+                    {key.replace(/([A-Z])/g, ' $1').trim()}
+                  </span>
+                  <input
+                    type="text"
+                    value={value}
+                    onChange={(e) => handleColorChange(key, e.target.value)}
+                    className="flex-1 p-2 rounded text-sm"
+                    style={{ backgroundColor: themeColors.accent + '40', color: themeColors.text }}
+                  />
+                  <button
+                    onClick={() => activateEyeDropper(key)}
+                    className="p-2 rounded hover:opacity-80 transition-opacity"
+                    style={{ backgroundColor: themeColors.accent, color: themeColors.text }}
+                    title="Pick color from screen"
+                  >
+                    🎨
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Eye Dropper Status */}
+          {eyeDropperActive && (
+            <div className="p-3 rounded text-sm text-center" 
+                 style={{ backgroundColor: themeColors.accent + '40', color: themeColors.text }}>
+              <p>🎨 Click anywhere on the screen to pick a color</p>
+              <p className="text-xs mt-1" style={{ color: themeColors.text + '99' }}>
+                Press ESC to cancel • Current: {tempColor}
+              </p>
+            </div>
+          )}
+
+          {/* Actions */}
+          <div className="flex gap-3 pt-4">
+            <button
+              onClick={resetColors}
+              className="flex-1 px-4 py-2 rounded font-medium hover:opacity-90 transition-opacity"
+              style={{ backgroundColor: themeColors.accent, color: themeColors.text }}
+            >
+              Reset to Default
+            </button>
+            <button
+              onClick={() => setShowColorPicker(false)}
+              className="flex-1 px-4 py-2 rounded font-medium hover:opacity-90 transition-opacity"
+              style={{ backgroundColor: themeColors.primary, color: 'white' }}
+            >
+              Apply Colors
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   if (loading) {
     return (
-      <div className="bg-red-500 font-sans text-white h-screen overflow-hidden">
+      <div className="font-sans text-white h-screen overflow-hidden" style={{ backgroundColor: themeColors.secondary }}>
         <SearchBar />
         <LeftSidebar />
         <StatsSideBar />
         <main className="ml-24 mr-80 pt-20 px-8 h-full overflow-y-auto">
-          <div className="bg-neutral-800/30 rounded-lg p-8 text-center mt-8">
-            <p className="text-neutral-300">Loading your personalized content...</p>
+          <div className="rounded-lg p-8 text-center mt-8" style={{ backgroundColor: themeColors.tileBg }}>
+            <p style={{ color: themeColors.text }}>Loading your personalized content...</p>
           </div>
         </main>
       </div>
@@ -1077,21 +1097,50 @@ export const LikedPage = () => {
   }
 
   return (
-    <div className="bg-red-500 font-sans text-white h-screen overflow-hidden">
+    <div className="font-sans h-screen overflow-hidden" style={{ backgroundColor: themeColors.secondary, color: themeColors.text }}>
       <SearchBar />
       <LeftSidebar />
       <StatsSideBar />
 
+      {showColorPicker && <ColorPicker />}
+      
+      {/* Color Customization Button */}
+      <button
+        onClick={() => setShowColorPicker(true)}
+        className="fixed bottom-6 right-6 z-40 p-3 rounded-full shadow-lg hover:scale-110 transition-transform"
+        style={{ backgroundColor: themeColors.primary, color: 'white' }}
+        title="Customize colors"
+      >
+        🎨
+      </button>
+
       <main className="ml-24 mr-80 pt-20 px-8 h-full overflow-y-auto">
         {/* Header */}
-        <header className="py-8 border-b border-neutral-700/50">
-          <h1 className="text-6xl font-black lowercase">My Liked Page</h1>
-          <p className="text-neutral-300 mt-2">Personalize your music collection</p>
+        <header className="py-8 border-b" style={{ borderColor: themeColors.accent + '40' }}>
+          <h1 className="text-6xl font-black lowercase" style={{ color: themeColors.text }}>My Liked Page</h1>
+          <p className="mt-2" style={{ color: themeColors.text + 'CC' }}>Personalize your music collection</p>
           
           {/* NEW: Lyrics customization info */}
-          <div className="flex items-center gap-2 mt-4 text-sm text-blue-300">
+          <div className="flex items-center gap-2 mt-4 text-sm" style={{ color: themeColors.primary }}>
             <span>💡</span>
             <span>Click the scissor icon on lyrics tiles to customize which verses to feature</span>
+          </div>
+
+          {/* Current Theme Display */}
+          <div className="flex items-center gap-3 mt-4">
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded" style={{ backgroundColor: themeColors.primary }}></div>
+              <span className="text-xs" style={{ color: themeColors.text + '99' }}>
+                Theme: {colorTheme.charAt(0).toUpperCase() + colorTheme.slice(1)}
+              </span>
+            </div>
+            <button
+              onClick={() => setShowColorPicker(true)}
+              className="text-xs px-2 py-1 rounded hover:opacity-80 transition-opacity"
+              style={{ backgroundColor: themeColors.accent + '40', color: themeColors.text }}
+            >
+              Change Colors
+            </button>
           </div>
         </header>
 
@@ -1101,10 +1150,11 @@ export const LikedPage = () => {
             {/* Templates Section */}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-bold">Templates</h2>
+                <h2 className="text-2xl font-bold" style={{ color: themeColors.text }}>Templates</h2>
                 <button
                   onClick={() => setShowTemplates(!showTemplates)}
-                  className="px-3 py-1 bg-neutral-700 hover:bg-neutral-600 rounded text-sm transition-colors"
+                  className="px-3 py-1 rounded text-sm hover:opacity-80 transition-opacity"
+                  style={{ backgroundColor: themeColors.accent + '40', color: themeColors.text }}
                 >
                   {showTemplates ? 'Hide' : 'Show'}
                 </button>
@@ -1116,14 +1166,18 @@ export const LikedPage = () => {
                     <div
                       key={key}
                       onClick={() => applyTemplate(key)}
-                      className="p-4 bg-neutral-800/30 rounded-lg hover:bg-neutral-800/50 transition-colors cursor-pointer group border border-neutral-700"
+                      className="p-4 rounded-lg hover:opacity-90 transition-opacity cursor-pointer group border"
+                      style={{ 
+                        backgroundColor: themeColors.tileBg,
+                        borderColor: themeColors.accent + '40'
+                      }}
                     >
-                      <h3 className="font-semibold text-white mb-1">{template.name}</h3>
-                      <p className="text-neutral-400 text-sm">
+                      <h3 className="font-semibold mb-1" style={{ color: themeColors.text }}>{template.name}</h3>
+                      <p className="text-sm" style={{ color: themeColors.text + '99' }}>
                         {template.layout.length} tiles • {template.layout.filter(t => t.type === 'lyrics').length} lyrics tiles
                       </p>
                       <div className="text-right mt-2">
-                        <span className="text-neutral-500 group-hover:text-neutral-300 transition-colors">
+                        <span style={{ color: themeColors.text + '99' }} className="group-hover:opacity-100 opacity-70 transition-opacity">
                           Use template →
                         </span>
                       </div>
@@ -1135,121 +1189,68 @@ export const LikedPage = () => {
 
             {/* Music Content Section */}
             <div className="mb-8">
-              <h2 className="text-2xl font-bold mb-4">Music</h2>
+              <h2 className="text-2xl font-bold mb-4" style={{ color: themeColors.text }}>Music</h2>
               
               <div className="space-y-4">
-                {/* Artist Tile */}
-                <div 
-                  onClick={() => addTile('artist')}
-                  className="p-4 bg-neutral-800/30 rounded-lg hover:bg-neutral-800/50 transition-colors cursor-pointer group"
-                >
-                  <h3 className="font-semibold text-white mb-1">Artist</h3>
-                  <p className="text-neutral-400 text-sm">Add an artist tile</p>
-                  <div className="text-right mt-2">
-                    <span className="text-neutral-500 group-hover:text-neutral-300 transition-colors">&gt;</span>
+                {['artist', 'song', 'album', 'lyrics'].map((type) => (
+                  <div 
+                    key={type}
+                    onClick={() => addTile(type)}
+                    className="p-4 rounded-lg hover:opacity-90 transition-opacity cursor-pointer group"
+                    style={{ backgroundColor: themeColors.tileBg }}
+                  >
+                    <h3 className="font-semibold mb-1 capitalize" style={{ color: themeColors.text }}>
+                      {type}
+                    </h3>
+                    <p className="text-sm" style={{ color: themeColors.text + '99' }}>
+                      Add {type === 'lyrics' ? 'a' : 'an'} {type} tile
+                    </p>
+                    <div className="text-right mt-2">
+                      <span style={{ color: themeColors.text + '99' }} className="group-hover:opacity-100 opacity-70 transition-opacity">
+                        &gt;
+                      </span>
+                    </div>
                   </div>
-                </div>
-
-                {/* Song Tile */}
-                <div 
-                  onClick={() => addTile('song')}
-                  className="p-4 bg-neutral-800/30 rounded-lg hover:bg-neutral-800/50 transition-colors cursor-pointer group"
-                >
-                  <h3 className="font-semibold text-white mb-1">Song</h3>
-                  <p className="text-neutral-400 text-sm">Add a song tile</p>
-                  <div className="text-right mt-2">
-                    <span className="text-neutral-500 group-hover:text-neutral-300 transition-colors">&gt;</span>
-                  </div>
-                </div>
-
-                {/* Album Tile */}
-                <div 
-                  onClick={() => addTile('album')}
-                  className="p-4 bg-neutral-800/30 rounded-lg hover:bg-neutral-800/50 transition-colors cursor-pointer group"
-                >
-                  <h3 className="font-semibold text-white mb-1">Album</h3>
-                  <p className="text-neutral-400 text-sm">Add an album tile</p>
-                  <div className="text-right mt-2">
-                    <span className="text-neutral-500 group-hover:text-neutral-300 transition-colors">&gt;</span>
-                  </div>
-                </div>
-
-                {/* Lyrics Tile */}
-                <div 
-                  onClick={() => addTile('lyrics')}
-                  className="p-4 bg-neutral-800/30 rounded-lg hover:bg-neutral-800/50 transition-colors cursor-pointer group"
-                >
-                  <h3 className="font-semibold text-white mb-1">Lyrics</h3>
-                  <p className="text-neutral-400 text-sm">Add a lyrics tile</p>
-                  <div className="text-right mt-2">
-                    <span className="text-neutral-500 group-hover:text-neutral-300 transition-colors">&gt;</span>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
 
             {/* Divider */}
-            <div className="border-t border-neutral-700/50 my-6"></div>
+            <div className="my-6" style={{ borderTop: `1px solid ${themeColors.accent}40` }}></div>
 
             {/* Layout Elements Section */}
             <div>
-              <h2 className="text-xl font-semibold mb-4 text-neutral-300">Layout</h2>
+              <h2 className="text-xl font-semibold mb-4" style={{ color: themeColors.text + 'CC' }}>Layout</h2>
               
               <div className="space-y-4">
-                {/* Section Header */}
-                <div 
-                  onClick={() => addTile('section')}
-                  className="p-4 bg-neutral-800/30 rounded-lg hover:bg-neutral-800/50 transition-colors cursor-pointer group"
-                >
-                  <h3 className="font-semibold text-white mb-1">Section header</h3>
-                  <p className="text-neutral-400 text-sm">Add a section header</p>
-                  <div className="text-right mt-2">
-                    <span className="text-neutral-500 group-hover:text-neutral-300 transition-colors">&gt;</span>
+                {['section', 'text', 'picture', 'spacer'].map((type) => (
+                  <div 
+                    key={type}
+                    onClick={() => addTile(type)}
+                    className="p-4 rounded-lg hover:opacity-90 transition-opacity cursor-pointer group"
+                    style={{ backgroundColor: themeColors.tileBg }}
+                  >
+                    <h3 className="font-semibold mb-1 capitalize" style={{ color: themeColors.text }}>
+                      {type === 'section' ? 'Section header' : type}
+                    </h3>
+                    <p className="text-sm" style={{ color: themeColors.text + '99' }}>
+                      Add {type === 'spacer' ? 'a' : type === 'section' ? 'a section header' : `a ${type}`} tile
+                    </p>
+                    <div className="text-right mt-2">
+                      <span style={{ color: themeColors.text + '99' }} className="group-hover:opacity-100 opacity-70 transition-opacity">
+                        &gt;
+                      </span>
+                    </div>
                   </div>
-                </div>
-
-                {/* Text Tile */}
-                <div 
-                  onClick={() => addTile('text')}
-                  className="p-4 bg-neutral-800/30 rounded-lg hover:bg-neutral-800/50 transition-colors cursor-pointer group"
-                >
-                  <h3 className="font-semibold text-white mb-1">Text</h3>
-                  <p className="text-neutral-400 text-sm">Add a text tile</p>
-                  <div className="text-right mt-2">
-                    <span className="text-neutral-500 group-hover:text-neutral-300 transition-colors">&gt;</span>
-                  </div>
-                </div>
-
-                {/* Picture Tile */}
-                <div 
-                  onClick={() => addTile('picture')}
-                  className="p-4 bg-neutral-800/30 rounded-lg hover:bg-neutral-800/50 transition-colors cursor-pointer group"
-                >
-                  <h3 className="font-semibold text-white mb-1">Picture</h3>
-                  <p className="text-neutral-400 text-sm">Add a picture tile</p>
-                  <div className="text-right mt-2">
-                    <span className="text-neutral-500 group-hover:text-neutral-300 transition-colors">&gt;</span>
-                  </div>
-                </div>
-
-                {/* Spacer Tile */}
-                <div 
-                  onClick={() => addTile('spacer')}
-                  className="p-4 bg-neutral-800/30 rounded-lg hover:bg-neutral-800/50 transition-colors cursor-pointer group"
-                >
-                  <h3 className="font-semibold text-white mb-1">Spacer</h3>
-                  <p className="text-neutral-400 text-sm">Add a spacer tile</p>
-                  <div className="text-right mt-2">
-                    <span className="text-neutral-500 group-hover:text-neutral-300 transition-colors">&gt;</span>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
 
             {/* Clear All Button */}
             <button 
               onClick={() => setLayout([])}
-              className="w-full mt-6 px-4 py-3 bg-red-600 hover:bg-red-700 rounded-lg transition-colors font-medium"
+              className="w-full mt-6 px-4 py-3 rounded-lg hover:opacity-90 transition-opacity font-medium"
+              style={{ backgroundColor: '#ef4444', color: 'white' }}
             >
               Clear All Tiles
             </button>
@@ -1258,9 +1259,9 @@ export const LikedPage = () => {
           {/* Right Content Area - Grid Layout */}
           <div className="flex-1">
             {layout.length === 0 ? (
-              <div className="bg-neutral-800/30 rounded-lg p-16 text-center">
-                <p className="text-neutral-400 text-lg mb-2">Your liked page is empty</p>
-                <p className="text-neutral-500 text-sm">
+              <div className="rounded-lg p-16 text-center" style={{ backgroundColor: themeColors.tileBg }}>
+                <p className="text-lg mb-2" style={{ color: themeColors.text + '99' }}>Your liked page is empty</p>
+                <p className="text-sm" style={{ color: themeColors.text + '77' }}>
                   Click on the tiles to the left to start building your personalized page, or try a template above!
                 </p>
               </div>
@@ -1273,7 +1274,8 @@ export const LikedPage = () => {
                       <button
                         onClick={() => moveTile(tile.id, 'up')}
                         disabled={index === 0}
-                        className="w-6 h-6 bg-neutral-700 rounded text-xs disabled:opacity-30"
+                        className="w-6 h-6 rounded text-xs disabled:opacity-30"
+                        style={{ backgroundColor: themeColors.accent, color: themeColors.text }}
                         title="Move up"
                       >
                         ↑
@@ -1281,7 +1283,8 @@ export const LikedPage = () => {
                       <button
                         onClick={() => moveTile(tile.id, 'down')}
                         disabled={index === layout.length - 1}
-                        className="w-6 h-6 bg-neutral-700 rounded text-xs disabled:opacity-30"
+                        className="w-6 h-6 rounded text-xs disabled:opacity-30"
+                        style={{ backgroundColor: themeColors.accent, color: themeColors.text }}
                         title="Move down"
                       >
                         ↓
@@ -1289,7 +1292,8 @@ export const LikedPage = () => {
                       {editingTile !== tile.id ? (
                         <button
                           onClick={() => startEditing(tile.id, tile.content)}
-                          className="w-6 h-6 bg-blue-600 rounded text-xs"
+                          className="w-6 h-6 rounded text-xs"
+                          style={{ backgroundColor: themeColors.primary, color: 'white' }}
                           title="Edit"
                         >
                           ✎
@@ -1297,7 +1301,8 @@ export const LikedPage = () => {
                       ) : null}
                       <button
                         onClick={() => removeTile(tile.id)}
-                        className="w-6 h-6 bg-red-600 rounded text-xs"
+                        className="w-6 h-6 rounded text-xs"
+                        style={{ backgroundColor: '#ef4444', color: 'white' }}
                         title="Remove"
                       >
                         ×

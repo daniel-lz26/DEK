@@ -5,7 +5,7 @@ import { ProfilePage } from './pages/profile';
 import { LoginPage } from './pages/login';
 import { SignupPage } from './pages/signup';
 import { SettingsPage } from './pages/settings';
-import { FriendDeks } from './pages/friends';
+//import { FriendDeks } from './pages/friends';
 import { StatsPage } from './pages/stats';
 import { LikedPage } from './pages/liked';
 import { SpotifyCallback } from './components/SpotifyCallback';
@@ -59,7 +59,6 @@ function App() {
           <>
             <Route path="/" element={<Home onLogout={handleLogout} isSpotifyConnected={isSpotifyConnected} />} />
             <Route path="/profile" element={<ProfilePage onLogout={handleLogout} isSpotifyConnected={isSpotifyConnected} />} />
-            <Route path="/friends" element={<FriendDeks onLogout={handleLogout} />} />
             <Route path="/stats" element={<StatsPage onLogout={handleLogout} isSpotifyConnected={isSpotifyConnected} />} />
             <Route path="/settings" element={<SettingsPage onLogout={handleLogout} isSpotifyConnected={isSpotifyConnected} />} />
             <Route path="/liked" element={<LikedPage onLogout={handleLogout} isSpotifyConnected={isSpotifyConnected} />} />
