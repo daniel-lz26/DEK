@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { LeftSidebar } from '../components/LeftSideBar';
 import { getTopTracks, getTopArtists, getRecentlyPlayed } from '../lib/spotify';
+import { SearchBar } from '../components/SearchBar';
 
 // The main component for displaying user's Spotify statistics.
 export const StatsPage = ({ onLogout, isSpotifyConnected }) => {
@@ -73,23 +74,21 @@ export const StatsPage = ({ onLogout, isSpotifyConnected }) => {
 
   return (
     <div className="bg-neutral-900 text-white min-h-screen flex">
+  {/* Search Bar - Full Width at Top */}
+        <div className="mb-12 -mx-8 px-8">
+          <SearchBar />
+        </div>
       {/* Persistent sidebar for navigation */}
       <LeftSidebar />
       
       {/* Main content area */}
       <main className="ml-24 flex-1 p-8">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto pt-12">
           
           {/* Page Header */}
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-4xl font-bold">Your Music Stats</h1>
             <div className="w-1/4 flex justify-end">
-              <button
-                onClick={onLogout}
-                className="bg-neutral-800 hover:bg-neutral-700 text-white font-semibold text-sm py-2 px-4 rounded-full transition-colors"
-              >
-                Log Out
-              </button>
             </div>
           </div>
           

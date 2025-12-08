@@ -1,7 +1,6 @@
 // components/GenreExplorer.jsx
 import React, { useState, useEffect } from 'react';
 import { getTopArtists } from '../lib/spotify';
-import { LoadingSkeleton } from './LoadingSkeleton';
 
 export const GenreExplorer = () => {
   const [genres, setGenres] = useState([]);
@@ -41,7 +40,7 @@ if (loading) {
     <section className="mt-8">
       <h2 className="text-2xl font-bold mb-4">Your Top Genres</h2>
       <div className="bg-neutral-800/30 rounded-lg p-6">
-        <LoadingSkeleton type="list" count={15} />
+        <div className="text-center text-neutral-300">Loading your top genres...</div>
       </div>
     </section>
   );

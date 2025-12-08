@@ -37,31 +37,9 @@ export const LoginPage = ({ onLogin }) => {
 
           <div className="flex items-center gap-3">
             <div className="flex-1 h-px bg-neutral-600"></div>
-            <span className="text-neutral-400 text-sm">or</span>
-            <div className="flex-1 h-px bg-neutral-600"></div>
           </div>
-          
-          {/* 2. Sign Up Button */}
-          <Link 
-            to="/signup"
-            className="w-full border border-neutral-500 text-white font-bold py-3 px-4 rounded-full text-center hover:border-white transition-colors"
-          >
-            Sign Up
-          </Link>
-
-          {/* Log In Button */}
-          <button 
-            onClick={onLogin} 
-            className="w-full bg-red-500 text-white font-bold py-3 px-4 rounded-full hover:bg-red-600 transition-colors"
-          >
-            Log In
-          </button>
-          
-        </div>
-        <p className="text-xs text-neutral-500 mt-6 text-center">
-          (This is a demo. No username or password needed.)
-        </p>
       </div>
     </div>
+  </div>
   );
 };

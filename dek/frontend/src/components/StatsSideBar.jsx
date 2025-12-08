@@ -389,6 +389,7 @@ export const StatsSideBar = () => {
           {loading ? '...' : 'Refresh'}
         </button>
       </div>
+      <p className="text-neutral-400 text-sm font-bold mb-4 text-center">If you're getting an error, try playing a song or re-authenticating.</p>
 
       {/* Now Playing Indicator */}
       {isPlaying && currentTrack && (

@@ -3,7 +3,6 @@ import { SearchBar } from "../components/SearchBar";
 import { LeftSidebar } from "../components/LeftSideBar";
 import { StatsSideBar } from "../components/StatsSideBar";
 import { getTopArtists, getRecentlyPlayed } from '../lib/spotify';
-import { LoadingSkeleton } from '../components/LoadingSkeleton';
 
 // The main component for the application's home page.
 export const Home = ({ onLogout }) => {
@@ -129,7 +128,7 @@ export const Home = ({ onLogout }) => {
             </h2>
             
             {loading ? (
-              <LoadingSkeleton type="playing-card" count={8} />
+              <p className="text-center text-white">Loading...</p>
             ) : error ? (
               <p className="text-center text-white bg-red-700 p-4 rounded-lg">{error}</p>
             ) : (
