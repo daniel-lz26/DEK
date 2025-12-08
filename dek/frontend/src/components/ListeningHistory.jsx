@@ -1,6 +1,7 @@
 // components/ListeningHistory.jsx
 import React, { useState, useEffect } from 'react';
 import { getRecentlyPlayed, getTopTracks } from '../lib/spotify';
+import { LoadingSkeleton } from './LoadingSkeleton';
 
 export const ListeningHistory = () => {
   const [recentTracks, setRecentTracks] = useState([]);
@@ -23,16 +24,31 @@ export const ListeningHistory = () => {
     fetchListeningHistory();
   }, []);
 
-  if (loading) {
-    return (
-      <section className="mt-8">
-        <h2 className="text-2xl font-bold mb-4">Recently Played</h2>
-        <div className="bg-neutral-800/30 rounded-lg p-8 text-center">
-          <p className="text-neutral-300">Loading your recent tracks...</p>
+  // if (loading) {
+  //   return (
+  //     <section className="mt-8">
+  //       <h2 className="text-2xl font-bold mb-4">Recently Played</h2>
+  //       <div className="bg-neutral-800/30 rounded-lg p-8 text-center">
+  //         <p className="text-neutral-300">Loading your recent tracks...</p>
+  //       </div>
+  //     </section>
+  //   );
+  // }
+
+if (loading) {
+  return (
+    <section className="mt-8">
+      <h2 className="text-2xl font-bold mb-4">Music Evolution</h2>
+      <div className="bg-neutral-800/30 rounded-lg p-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <LoadingSkeleton type="card" count={5} />
+          <LoadingSkeleton type="card" count={5} />
+          <LoadingSkeleton type="card" count={5} />
         </div>
-      </section>
-    );
-  }
+      </div>
+    </section>
+  );
+}
 
   return (
     <section className="mt-8">
