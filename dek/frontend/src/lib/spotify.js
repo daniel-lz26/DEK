@@ -1,16 +1,9 @@
-const SPOTIFY_CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-const REDIRECT_URI = import.meta.env.VITE_SPOTIFY_REDIRECT_URI;
+const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
+const redirectUri = import.meta.env.VITE_SPOTIFY_REDIRECT_URI;
 
-// Debug: Add this to see what's happening
-console.log('🔍 ENV VARS:', {
-  clientId: import.meta.env.VITE_SPOTIFY_CLIENT_ID,
-  redirectUri: import.meta.env.VITE_SPOTIFY_REDIRECT_URI,
-  mode: import.meta.env.MODE
-});
-
-// Temporary: Use the values directly while debugging
-const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID || '693322d20f6840f3aff9e6b3d8a2f9e8';
-const redirectUri = import.meta.env.VITE_SPOTIFY_REDIRECT_URI || 'http://127.0.0.1:5176/callback';
+if (!clientId || !redirectUri) {
+  throw new Error('Missing Spotify environment variables. Check your .env.local file.');
+}
 
 const SCOPES = [
   'user-read-private',
