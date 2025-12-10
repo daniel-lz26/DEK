@@ -27,3 +27,10 @@ lib Folder - functions/backend stuff
 5. Then you add it to the home function and you're done for the most part
     ex.
         <Stats />
+
+6. Run the Project
+Use the following commands:
+
+Install dependencies: pnpm install
+
+Run the development server: pnpm run dev
