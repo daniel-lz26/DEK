@@ -29,6 +29,8 @@ lib Folder - functions/backend stuff
         <Stats />
 
 6. Run the Project
+   As this is a free version to be able to use it must be added to our usermanagement page, so please reach out kayla if you'd like to be added!
+    in order to host or run it locally we need your information including Name and Email of Spotify Account!
 Use the following commands:
 
 Install dependencies: pnpm install
